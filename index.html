@@ -6,27 +6,22 @@
     <title>Дрифт тачка</title>
   </head>
   <body>
-    <main>
-      <section id="first-screen">
-        <h2 class="screen-title">Выберете тип покрытия</h2>
-        <button class="clickable-area" data-flooring="gravel">
-          <img src="./assets/icons/gravel.svg" />
-          Грунт
-        </button>
-        <button class="clickable-area" data-flooring="asphalt">
-          <img src="./assets//icons/asphalt.jpg" />
-          Асфальт
-        </button>
-        <button class="clickable-area" data-flooring="linoleum">
-          <img src="./assets/icons/linoleum.png" />
-          Линолиум
-        </button>
-        <button class="clickable-area" data-flooring="tiles">
-          <img src="./assets/icons/tiles.png" />
-          Плитка
-        </button>
-      </section>
-    </main>
+    <div id="content">
+      <main class="loader">
+        <div class="spinner-box">
+          <div class="blue-orbit leo"></div>
+  
+          <div class="green-orbit leo"></div>
+  
+          <div class="red-orbit leo"></div>
+  
+          <div class="white-orbit w1 leo"></div>
+          <div class="white-orbit w2 leo"></div>
+          <div class="white-orbit w3 leo"></div>
+        </div>
+        <p class="spinner-caption">Соединение</p>
+      </main>
+    </div>
     <script src="renderer.js"></script>
   </body>
 </html>

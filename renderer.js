@@ -1,112 +1,187 @@
-const { ipcRenderer } = require("electron");
-const { testPort } = require("./test");
+const { startWritingTestData, stopWritingTestData } = require("./modules/test");
+const { portID, DIVIDERS, CAR_PARAMS_ENTRIES } = require("./modules/constants");
+const SerialPort = require("virtual-serialport");
+const fs = require("fs");
 
-const FLOORING_REQUEST_MAP = {
-  gravel: new Uint8Array([34, 3, 32]),
-  asphalt: new Uint8Array([34, 5, 120]),
-  linuleum: new Uint8Array([34, 5, 220]),
-  tiles: new Uint8Array([34, 6, 164])
-};
+let settings;
+let port;
 
-ipcRenderer.on("port-error", (event, arg) => {
-  switch (arg) {
-    case "stand-connection-error":
-      askForStandReload();
-    case "car-connection-error":
-      askToConnectCar();
-  }
+const settingsPromise = new Promise((resolve, reject) => {
+  fs.readFile("./settings.json", (err, data) => {
+    if (err) reject(err);
+    else resolve(JSON.parse(data));
+  });
 });
 
-function askForStandReload() {
-  document.querySelector("main").innerHTML = `
-  <h2 class="screen-title error">При загрузке стенда возникла ошибка, поробуйте перезапусить стенд</h2>
+const portOpenPromise = new Promise((resolve, reject) => {
+  port = new SerialPort(portID, { baudrate: 115200 });
+
+  port.on("open", err => {
+    if (err) reject(err);
+    else resolve();
+  });
+});
+
+function tryConnectingToPort() {
+  port = new SerialPort(portID, { baudrate: 115200 });
+
+  port.on("open", err => {
+    if (err) renderErrorScreen();
+    else if (settings.selectedGroundType) actions.startListeningToData();
+    else renderGroundTypeForm();
+  });
+}
+
+function handleInitializationError(err) {
+  console.error(err.message);
+  renderErrorScreen();
+}
+
+function renderErrorScreen() {
+  document.getElementById("content").innerHTML = `
+  <main class="error-page">
+    <h2 class="screen-title error">Пожалуйста, подключите машинку к стенду</h2>
+    <button class="btn" data-action="reconnect">Сделано!</button>
+  </main>
   `;
 }
 
-function askToConnectCar() {
-  document.querySelector("main").innerHTML = `
-  <h2 class="screen-title error">Пожалуйста, подключите машинку к стенду</h2>
-  `;
-}
+document.addEventListener("click", handleClick);
+Promise.all([settingsPromise, portOpenPromise])
+  .then(([resolvedSettings]) => {
+    settings = resolvedSettings;
+    if (settings.selectedGroundType) actions.startListeningToData();
+    else renderGroundTypeForm();
+  })
+  .catch(handleInitializationError);
 
-document.addEventListener("click", handleFlooringChange);
-
-function handleFlooringChange(event) {
-  if (event.target.classList.contains("flooring")){
-    testPort.writeToComputer(testData)
+function handleClick(event) {
+  const actionType = event.target.dataset.action;
+  if (actionType) {
+    console.log(actionType);
+    actions[actionType].call(this, event.target);
   }
-    // ipcRenderer.send("flooring-change", FLOORING_REQUEST_MAP[event.target.dataset.flooring]);
 }
 
-testPort.on('data', handleCarData);
+const actions = {
+  reconnect() {
+    showSpinner();
+    tryConnectingToPort();
+  },
+  selectGroundType(target) {
+    settings.selectedGroundType = target.dataset.groundType;
+    console.log(this.dataset);
+    document.querySelector(
+      'button[data-action="startListeningToData"]'
+    ).disabled = false;
+  },
+  startListeningToData() {
+    startWritingTestData(port);
+    renderCarDataTable();
+    port.on("data", handleCarData);
+  }
+};
 
-ipcRenderer.on("car-data", handleCarData);
+function renderGroundTypeForm() {
+  document.getElementById("content").innerHTML = `
+  <header class="screen-title">Выберете тип покрытия</header>
+  <main class="ground-types">
+    <div class="clickable-area" data-groundType="gravel" data-action="selectGroundType">
+      <img src="./assets/icons/gravel.svg" />
+      Грунт
+    </div>
+    <div class="clickable-area" data-groundType="asphalt" data-action="selectGroundType">
+      <img src="./assets//icons/asphalt.jpg" />
+      Асфальт
+    </div>
+    <div class="clickable-area" data-groundType="linoleum" data-action="selectGroundType">
+      <img src="./assets/icons/linoleum.png" />
+      Линолиум
+    </div>
+    <div class="clickable-area" data-groundType="tiles" data-action="selectGroundType">
 
-function handleCarData(data) {
-  const dataArray = new Uint8Array(data);
+      <img src="./assets/icons/tiles.png" />
+      Плитка
+    </div>
+    <label>
+      <input type="checkbox" name="remember" />
+      Запомнить
+    </label>
+    <button class="btn" disabled data-action="startListeningToData">Далее</button>
+  </main>
+  `;
+}
 
-  const dividers = new Uint8Array([161, 178, 195, 195, 212, 247]);
+function showSpinner() {
+  document.getElementById("content").innerHTML = `
+  <main class="loader">
+  <div class="spinner-box">
+    <div class="blue-orbit leo"></div>
+
+    <div class="green-orbit leo"></div>
+
+    <div class="red-orbit leo"></div>
+
+    <div class="white-orbit w1 leo"></div>
+    <div class="white-orbit w2 leo"></div>
+    <div class="white-orbit w3 leo"></div>
+  </div>
+  <p class="spinner-caption">Соединение</p>
+</main>
+  `;
+}
+
+function renderCarDataTable() {
+  document.getElementById("content").innerHTML = `
+  <header class="page-title">Параметры работы машинки</header>
+  <main>
+    <table class="parameters">
+      ${Object.keys(CAR_PARAMS_ENTRIES)
+        .map(
+          id => `
+        <tr>
+          <td class="parameter-name">${CAR_PARAMS_ENTRIES[id].label}</td>
+          <td class="parameter-value" id=${id}>Нет данных</td>
+        </tr>
+      `
+        )
+        .join("\n")}
+    </table>
+  </main>
+  `;
+}
+
+function handleCarData(buffer) {
+  const dataArray = new Uint8Array(buffer);
 
   let i;
 
-  for (i = 0; i < dividers.length; i++) {
-    if (dataArray[i] !== dividers[i]) {
+  for (i = 0; i < DIVIDERS.length; i++) {
+    if (dataArray[i] !== DIVIDERS[i]) {
       console.error("wrong data recieved");
       return;
     }
   }
 
   const dataMap = {
-    firstCellVoltage: (dataArray[i++] << 8) + dataArray[i++],
-    batteryCurrent: (dataArray[i++] << 8) + dataArray[i++],
+    firstCellVoltage: ((dataArray[i++] << 8) + dataArray[i++]) / 1000,
+    batteryCurrent: ((dataArray[i++] << 8) + dataArray[i++]) / 1000,
     isAvailableRecharging: dataArray[i++] === 1,
     isAvailableDischarging: dataArray[i++] === 1,
-    fuelCellVoltage: (dataArray[i++] << 8) + dataArray[i++],
-    fuelCellCurrent: (dataArray[i++] << 8) + dataArray[i++],
-    firstFuellCellTemp: (dataArray[i++] << 8) + dataArray[i++],
-    firstFuellCellFan: dataArray[i++],
-    hydrogenConsumption: (dataArray[i++] << 8) + dataArray[i++],
+    fuelCellVoltage: ((dataArray[i++] << 8) + dataArray[i++]) / 100,
+    fuelCellCurrent: ((dataArray[i++] << 8) + dataArray[i++]) / 1000,
+    fuellCellTemp: ((dataArray[i++] << 8) + dataArray[i++]) / 10,
+    fuellCellFan: dataArray[i++],
+    fuelCellOn: dataArray[i++],
+    hydrogenConsumption: ((dataArray[i++] << 8) + dataArray[i++]) / 100,
     hydrogenPressure: (dataArray[i++] << 8) + dataArray[i++],
     currentDirection: dataArray[i++]
   };
 
-  document.querySelector("main").innerHTML = `
-  <section id="second-screen">
-    <h2 class="screen-title">Параметры работы машинки</h2>
-    <table class="parameters">
-      <tr>
-        <td class="parameter-name">Напряжение АКБ 1банка</td class="parameter-name">
-        <td class="parameter-value">${dataMap.firstCellVoltage} В</td>
-      </tr>
-      <tr>
-        <td class="parameter-name">Ток АКБ</td>
-        <td class="parameter-value">${dataMap.batteryCurrent} А</td>
-      </tr>
-      <tr>
-        <td class="parameter-name">Напряжение топливного элемента</td>
-        <td class="parameter-value">${dataMap.fuelCellVoltage} В</td>
-      </tr>
-      <tr>
-        <td class="parameter-name">Ток топливного элемента</td>
-        <td class="parameter-value">${dataMap.fuelCellCurrent} А</td>
-      </tr>
-      <tr>
-        <td class="parameter-name">Температура топливного элемента</td>
-        <td class="parameter-value">${dataMap.firstFuellCellTemp} С</td>
-      </tr>
-      <tr>
-        <td class="parameter-name">Мощность вентилятора</td>
-        <td class="parameter-value">${dataMap.firstFuellCellFan} %</td>
-      </tr>
-      <tr>
-        <td class="parameter-name">Расход водорода</td>
-        <td class="parameter-value">${dataMap.hydrogenConsumption} л/час</td>
-      </tr>
-      <tr>
-        <td class="parameter-name">Давление водорода</td>
-        <td class="parameter-value">${dataMap.hydrogenPressure} мбар</td>
-      </tr>
-    </table>
-  </section>
-  `;
+  for (const id in dataMap) {
+    const td = document.getElementById(id);
+    if (td) {
+      td.innerHTML = dataMap[id] + " " + CAR_PARAMS_ENTRIES[id].units;
+    }
+  }
 }
