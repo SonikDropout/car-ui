@@ -1,0 +1,23 @@
+{
+  "name": "car-ui",
+  "version": "0.1.0",
+  "description": "User interface for drift car",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "keywords": [
+    "car",
+    "education",
+    "fuel cells"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^7.1.6",
+    "virtual-serialport": "^4.0.1"
+  },
+  "dependencies": {
+    "serialport": "^8.0.5"
+  }
+}

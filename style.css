@@ -1,0 +1,67 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 62.5%;
+}
+body {
+  font-size: 1.5em; /* currently ems cause chrome bug misinterpreting rems on body element */
+  line-height: 1.6;
+  font-weight: 400;
+  font-family: "Raleway", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial,
+    sans-serif;
+  color: #222;
+}
+
+#first-screen {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: minmax(100px, auto);
+}
+
+.screen-title {
+  grid-area: 1 / 1 / 2 / 5;
+  text-align: center;
+  margin: 3.4rem;
+}
+
+.clickable-area {
+  border: none;
+  background-color: white;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  padding: 10%;
+}
+
+.clickable-area img {
+  width: 50%;
+  height: 50%;
+  margin-bottom: 10%;
+}
+
+.parameters {
+  width: 100%;
+}
+
+th,
+td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #e1e1e1;
+}
+th:first-child,
+td:first-child {
+  padding-left: 0;
+}
+th:last-child,
+td:last-child {
+  padding-right: 0;
+}
