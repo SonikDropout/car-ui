@@ -1,7 +1,7 @@
 <header class="screen-title">Выберете тип покрытия</header>
 <main class="ground-types">
   <div
-    class="clickable-area"
+    class="option"
     data-groundType="gravel"
     data-action="selectGroundType"
   >
@@ -13,7 +13,7 @@
     Грунт
   </div>
   <div
-    class="clickable-area"
+    class="option"
     data-groundType="asphalt"
     data-action="selectGroundType"
   >
@@ -25,7 +25,7 @@
     Асфальт
   </div>
   <div
-    class="clickable-area"
+    class="option"
     data-groundType="linoleum"
     data-action="selectGroundType"
   >
@@ -37,7 +37,7 @@
     Линолиум
   </div>
   <div
-    class="clickable-area"
+    class="option"
     data-groundType="tiles"
     data-action="selectGroundType"
   >
@@ -49,8 +49,8 @@
     Плитка
   </div>
   <label>
-    <input type="checkbox" name="remember" />
+    <input type="checkbox" name="remember" data-action="rememberSelection" />
     Запомнить
   </label>
-  <button class="btn" disabled data-action="startListeningToData">Далее</button>
+  <button class="btn" disabled data-action="startCarCommunication">Далее</button>
 </main>

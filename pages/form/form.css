@@ -1,0 +1,43 @@
+
+main {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-column-gap: 10px;
+  grid-template-rows: auto repeat(2, 64px);
+}
+
+label {
+  grid-column: span 4;
+  text-align: center;
+  margin-top: auto;
+}
+
+button {
+  grid-column: span 4;
+}
+
+.option {
+  border: none;
+  background-color: var(--bg-color);
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  padding: 16px;
+  transition: scale .1s ease-in-out;
+}
+
+.option.selected {
+  background-color: var(--text-color);
+  color: var(--bg-color);
+  transform: scale(1.1);
+}
+
+.option.selected path {
+  fill: var(--bg-color);
+}
+
+img {
+  width: 50%;
+  display: block;
+  margin: 0 auto 10%;
+}

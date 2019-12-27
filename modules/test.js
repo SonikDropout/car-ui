@@ -1,4 +1,4 @@
-const { CAR_PARAMS_SEQUENCE, DIVIDERS } = require("./constants");
+const carBuffer = require('./dataModel');
 
 function convertDecToBytes(number, bytes = 1) {
   if (bytes == 1) {
@@ -8,7 +8,7 @@ function convertDecToBytes(number, bytes = 1) {
   }
 }
 
-const testData = DIVIDERS.concat([
+const testData = carBuffer.separators.concat([
   3128,
   10261,
   0,
@@ -20,34 +20,38 @@ const testData = DIVIDERS.concat([
   0,
   1443,
   2000,
-  1
+  1,
 ]);
 
-const dataByteLengths = testData.map(n => (n < 256 ? 1 : 2));
+const dataByteLengths = testData.map((n) => (n < 256 ? 1 : 2));
 
-const testDataIncrementers = {
-  firstCellVoltage: n => n - Math.round(Math.random()),
-  batteryCurrent: n => n - Math.floor(Math.random() * 10),
-  isAvailableRecharging: n => n,
-  isAvailableDischarging: n => n,
-  fuelCellVoltage: n => n - 1,
-  fuelCellCurrent: n => n - 1,
-  fuellCellTemp: n => n + 1,
-  fuellCellFan: n => n,
-  fuelCellOn: n => n,
-  hydrogenConsumption: n => n + Math.round(Math.random() * 2 - 1),
-  hydrogenPressure: n => n,
-  currentDirection: n => n
-};
+function incrementTestData() {
+  for (let i = carBuffer.separators.length; i < testData.length - carBuffer.separators.length; i++) {
+    testData[i] = testDataIncrementers[i](testData[i]);
+  }
+}
 
-const carBufferLength = CAR_PARAMS_SEQUENCE.length;
+const testDataIncrementers = [
+  (n) => n - Math.round(Math.random()),
+  (n) => n - Math.floor(Math.random() * 10),
+  (n) => n,
+  (n) => n,
+  (n) => n - 1,
+  (n) => n - 1,
+  (n) => n + 1,
+  (n) => n,
+  (n) => n,
+  (n) => n + Math.round(Math.random() * 2 - 1),
+  (n) => n,
+  (n) => n,
+];
 
 function* generateTestData() {
   while (1) {
-    const testCarBuffer = new Uint8Array(carBufferLength);
+    const testCarBuffer = new Uint8Array(carBuffer.length);
     let i = 0;
     let j = 0;
-    while (i < carBufferLength) {
+    while (i < carBuffer.length) {
       if (i < 6) {
         testCarBuffer.set(convertDecToBytes(testData[j++]), i++);
       } else {
@@ -55,10 +59,10 @@ function* generateTestData() {
           convertDecToBytes(testData[j], dataByteLengths[j]),
           i
         );
-        testData[j] = testDataIncrementers[CAR_PARAMS_SEQUENCE[i]](testData[j]);
         i += dataByteLengths[j++];
       }
     }
+    incrementTestData();
     yield testCarBuffer.buffer;
   }
 }
@@ -68,7 +72,7 @@ let interval;
 exports.startWritingTestData = function(port) {
   const testDataGenerator = generateTestData();
   interval = setInterval(
-    _ => port.writeToComputer(testDataGenerator.next().value),
+    (_) => port.writeToComputer(testDataGenerator.next().value),
     1000
   );
 };

@@ -15,6 +15,7 @@
   "license": "ISC",
   "devDependencies": {
     "electron": "^7.1.6",
+    "electron-reload": "^1.5.0",
     "virtual-serialport": "^4.0.1"
   },
   "dependencies": {

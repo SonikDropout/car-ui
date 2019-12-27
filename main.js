@@ -1,4 +1,6 @@
-const { app, BrowserWindow, screen } = require("electron");
+const { app, BrowserWindow, screen } = require('electron');
+
+require('electron-reload')(__dirname);
 
 function createWindow() {
   const { width, height } = screen.getPrimaryDisplay().workAreaSize;
@@ -9,15 +11,14 @@ function createWindow() {
     height: 480,
     frame: false,
     webPreferences: {
-      nodeIntegration: true
-    }
+      nodeIntegration: true,
+    },
   });
 
   // win.maximize();
 
   // и загрузить index.html приложения.
-  win.loadFile("index.html");
+  win.loadFile('index.html');
 }
 
-app.on("ready", createWindow);
-
+app.on('ready', createWindow);
