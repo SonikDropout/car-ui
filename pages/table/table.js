@@ -11,24 +11,8 @@ module.exports = class Table extends Component {
       parent: options.parent,
       replace: options.replace,
     });
-    this.fillTable();
     this.bluetoothConnection = options.port;
     this.listenBluetoothConnection();
-  }
-
-  fillTable() {
-    document.querySelector('table').innerHTML = CarBuffer.entries
-      .map((entry) =>
-        entry.displayType === 'table'
-          ? `
-      <tr>
-        <td class="parameter-name">${entry.label}</td>
-        <td class="parameter-value" id=${entry.name}>Нет данных</td>
-      </tr>
-    `
-          : ''
-      )
-      .join('\n');
   }
 
   listenBluetoothConnection() {
@@ -40,10 +24,18 @@ module.exports = class Table extends Component {
       const convertedBuffer = CarBuffer.makeHashMap(buffer);
       CarBuffer.entries.forEach((entry) => {
         const elementToFill = document.getElementById(entry.name);
-        if (elementToFill)
+        if (!elementToFill) return;
+        else if (entry.displayType == 'number')
           elementToFill.innerText = `${
             convertedBuffer[entry.name]
           } ${entry.units || ''}`;
+        else if (entry.displayType == 'text') 
+          elementToFill.innerText = convertedBuffer[entry.name];
+        else {
+          elementToFill.classList.add(
+            convertedBuffer[entry.name] ? 'positive' : 'negative'
+          );
+        }
       });
     } catch (err) {
       console.log(err);

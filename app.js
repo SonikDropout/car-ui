@@ -27,28 +27,19 @@ class App {
     this.port.on('open', (err) => {
       if (err) {
         this.showErrorPage();
-      } else if (this.settings.groundType) {
-        this.showTablePage();
       } else {
-        this.showFormPage();
+        this.showDataPage();
       }
     });
   }
 
-  showTablePage() {
-    startWritingTestData(this.port);
+  showDataPage() {
+    if (process.env.NODE_ENV === 'development') {
+      startWritingTestData(this.port);
+    }
     this.currentPage = new Table({
       parent: this.root,
       port: this.port,
-    });
-  }
-
-  showFormPage() {
-    stopWritingTestData();
-    this.currentPage = new Form({
-      parent: this.root,
-      onNext: this.showTablePage.bind(this),
-      settings: this.settings,
     });
   }
 
