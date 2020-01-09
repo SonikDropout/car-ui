@@ -6,7 +6,8 @@
   --bg-color: #fff;
   --text-color: #222;
   --main-color: #00a4e9;
-  --border-color: #f3f3f3;
+  --border-color: #ccc;
+  --bg-highlight-color: #eeeeee;
 }
 
 html,

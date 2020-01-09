@@ -7,7 +7,7 @@ module.exports = {
       units: 'В',
       displayType: 'table',
       name: 'firstCellVoltage',
-      label: 'Напряжении первой банки аккумуляторная батарии',
+      label: 'Напряжение АКБ',
       getFromBuffer: (buffer) =>
         (buffer[this.idx++] * 256 + buffer[this.idx++]) / 1000,
     },
@@ -15,7 +15,7 @@ module.exports = {
       units: 'А',
       displayType: 'table',
       name: 'batteryCurrent',
-      label: 'Ток аккумуляторная батарии',
+      label: 'Ток АКБ',
       getFromBuffer: (buffer) =>
         (buffer[this.idx++] * 256 + buffer[this.idx++]) / 1000,
     },
@@ -35,7 +35,7 @@ module.exports = {
       units: 'В',
       displayType: 'table',
       name: 'fuelCellVoltage',
-      label: 'Напряжение на топливном элементе',
+      label: 'Напряжение БТЭ',
       getFromBuffer: (buffer) =>
         (buffer[this.idx++] * 256 + buffer[this.idx++]) / 100,
     },
@@ -43,7 +43,7 @@ module.exports = {
       units: 'А',
       displayType: 'table',
       name: 'fuelCellCurrent',
-      label: 'Ток на топливном элементе',
+      label: 'Ток БТЭ',
       getFromBuffer: (buffer) =>
         (buffer[this.idx++] * 256 + buffer[this.idx++]) / 1000,
     },
@@ -51,7 +51,7 @@ module.exports = {
       units: '\u2103',
       displayType: 'table',
       name: 'fuellCellTemp',
-      label: 'Температура топливного элемента',
+      label: 'Температура БТЭ',
       getFromBuffer: (buffer) =>
         (buffer[this.idx++] * 256 + buffer[this.idx++]) / 10,
     },
@@ -59,7 +59,7 @@ module.exports = {
       units: '%',
       displayType: 'table',
       name: 'fuellCellFan',
-      label: 'Скорость вентилятора топливного элемента',
+      label: 'Мощность вентилятора БТЭ',
       getFromBuffer: (buffer) => buffer[this.idx++],
     },
     {
