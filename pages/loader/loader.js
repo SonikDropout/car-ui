@@ -15,7 +15,7 @@ module.exports = class Loader extends Component {
     const loadingText = document.querySelector('.loading');
     let i = 1;
     function updateLoadingText() {
-      loadingText.innerText = 'Соединение' + Array((++i % 3) + 1).fill('.');
+      loadingText.innerText = 'Соединение' + Array((++i % 4) + 1).join('.');
       setTimeout(updateLoadingText, 300);
     }
     updateLoadingText();
