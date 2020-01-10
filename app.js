@@ -40,7 +40,14 @@ class App {
     this.currentPage = new Table({
       parent: this.root,
       port: this.port,
+      groundType: this.settings.groundType,
+      onGroundTypeChange: this.saveGroundType.bind(this)
     });
+  }
+
+  saveGroundType(type) {
+    this.settings.groundType = type;
+    fs.writeFile('./settings.json', JSON.stringify(this.settings), Function.prototype);
   }
 
   showErrorPage() {

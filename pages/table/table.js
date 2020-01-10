@@ -12,7 +12,22 @@ module.exports = class Table extends Component {
       replace: options.replace,
     });
     this.bluetoothConnection = options.port;
+    this.saveGroundType = options.onGroundTypeChange;
     this.listenBluetoothConnection();
+    this.selectGroundType(options.groundType);
+    this.listenGroundTypeChanges();
+  }
+
+  listenGroundTypeChanges() {
+    document.forms[0].addEventListener('click', this.handleFormClick.bind(this));
+  }
+
+  handleFormClick(event) {
+    this.saveGroundType(event.target.value);
+  }
+
+  selectGroundType(type) {
+    if (type) document.getElementById(type).checked = true;
   }
 
   listenBluetoothConnection() {
@@ -29,7 +44,7 @@ module.exports = class Table extends Component {
           elementToFill.innerText = `${
             convertedBuffer[entry.name]
           } ${entry.units || ''}`;
-        else if (entry.displayType == 'text') 
+        else if (entry.displayType == 'text')
           elementToFill.innerText = convertedBuffer[entry.name];
         else {
           elementToFill.classList.add(
