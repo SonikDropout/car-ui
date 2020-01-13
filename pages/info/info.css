@@ -1,0 +1,110 @@
+main {
+  margin: 0;
+  display: grid;
+  grid-template-areas: 'bat cell'
+    'gnd gnd';
+  grid-gap: 24px;
+  padding: 24px;
+  align-items: start;
+  font-size: 1.4rem;
+}
+
+.bat {
+  grid-area: bat;
+}
+.cell {
+  grid-area: cell;
+}
+.ground {
+  grid-area: gnd;
+  text-align: center;
+  display: flex;
+  justify-content: space-around;
+}
+
+.icon {
+  height: 120px;
+  display: block;
+  margin: auto;
+}
+
+.icon path {
+  fill: var(--theme-color);
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.indicator::after {
+  content: '';
+  border-radius: 50%;
+  width: .8rem;
+  height: .8rem;
+  display: inline-block;
+}
+
+.indicator.positive::after {
+  background-color: green;
+}
+
+.indicator.negative::after {
+  background-color: red;
+  animation: blink .5s linear infinite alternate;
+}
+
+@keyframes blink {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+input {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+}
+
+label {
+  position: relative;
+  padding: 1rem 2.5rem;
+  border-radius: .25rem;
+  overflow: hidden;
+}
+
+label::after {
+  content: attr(title);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  clip-path: polygon(0 100%, 0 100%, 0 100%);
+  transition: .5s ease;
+  background-color: var(--theme-color);
+  color: var(--bg-color);
+}
+
+input:checked+label::after {
+  clip-path: polygon(0 100%, 200% 100%, 0 -100%);
+}
+
+h3 {
+  padding: 0;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+
+

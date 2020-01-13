@@ -5,102 +5,121 @@ module.exports = {
   entries: [
     {
       units: 'В',
-      displayType: 'table',
-      name: 'firstCellVoltage',
+      displayType: 'number',
+      name: 'batteryVoltage',
       label: 'Напряжение АКБ',
-      getFromBuffer: (buffer) =>
-        (buffer[this.idx++] * 256 + buffer[this.idx++]) / 1000,
+      getFromBuffer(buffer) {
+        return (buffer[this.idx++] * 256 + buffer[this.idx++]) / 1000;
+      },
     },
     {
       units: 'А',
-      displayType: 'table',
+      displayType: 'number',
       name: 'batteryCurrent',
       label: 'Ток АКБ',
-      getFromBuffer: (buffer) =>
-        (buffer[this.idx++] * 256 + buffer[this.idx++]) / 1000,
+      getFromBuffer(buffer) {
+        return (buffer[this.idx++] * 256 + buffer[this.idx++]) / 1000;
+      },
     },
     {
       name: 'isAvailableRecharging',
       label: '',
-      displayType: 'checkmark',
-      getFromBuffer: (buffer) => buffer[this.idx++] == 1,
+      displayType: 'indicator',
+      getFromBuffer(buffer) {
+        return buffer[this.idx++] == 1;
+      },
     },
     {
       name: 'isAvailableDischarging',
       label: '',
-      displayType: 'checkmark',
-      getFromBuffer: (buffer) => buffer[this.idx++] == 1,
+      displayType: 'indicator',
+      getFromBuffer(buffer) {
+        return buffer[this.idx++] == 1;
+      },
     },
     {
       units: 'В',
-      displayType: 'table',
+      displayType: 'number',
       name: 'fuelCellVoltage',
       label: 'Напряжение БТЭ',
-      getFromBuffer: (buffer) =>
-        (buffer[this.idx++] * 256 + buffer[this.idx++]) / 100,
+      getFromBuffer(buffer) {
+        return (buffer[this.idx++] * 256 + buffer[this.idx++]) / 100;
+      },
     },
     {
       units: 'А',
-      displayType: 'table',
+      displayType: 'number',
       name: 'fuelCellCurrent',
       label: 'Ток БТЭ',
-      getFromBuffer: (buffer) =>
-        (buffer[this.idx++] * 256 + buffer[this.idx++]) / 1000,
+      getFromBuffer(buffer) {
+        return (buffer[this.idx++] * 256 + buffer[this.idx++]) / 1000;
+      },
     },
     {
       units: '\u2103',
-      displayType: 'table',
+      displayType: 'number',
       name: 'fuellCellTemp',
       label: 'Температура БТЭ',
-      getFromBuffer: (buffer) =>
-        (buffer[this.idx++] * 256 + buffer[this.idx++]) / 10,
+      getFromBuffer(buffer) {
+        return (buffer[this.idx++] * 256 + buffer[this.idx++]) / 10;
+      },
     },
     {
       units: '%',
-      displayType: 'table',
+      displayType: 'number',
       name: 'fuellCellFan',
       label: 'Мощность вентилятора БТЭ',
-      getFromBuffer: (buffer) => buffer[this.idx++],
+      getFromBuffer(buffer) {
+        return buffer[this.idx++];
+      },
     },
     {
       name: 'fuellCellOn',
       label: '',
-      displayType: 'checkmark',
-      getFromBuffer: (buffer) => buffer[this.idx++] == 1,
+      displayType: 'text',
+      getFromBuffer(buffer) {
+        return buffer[this.idx++] ? 'работает' : 'выключена';
+      },
     },
     {
       units: 'л/час',
-      displayType: 'table',
+      displayType: 'number',
       name: 'hydrogenConsumption',
       label: 'Расход водорода',
-      getFromBuffer: (buffer) =>
-        (buffer[this.idx++] * 256 + buffer[this.idx++]) / 100,
+      getFromBuffer(buffer) {
+        return (buffer[this.idx++] * 256 + buffer[this.idx++]) / 100;
+      },
     },
     {
       units: 'мбар',
-      displayType: 'table',
+      displayType: 'number',
       name: 'hydrogenPressure',
       label: 'Давление водорода',
-      getFromBuffer: (buffer) => buffer[this.idx++] * 256 + buffer[this.idx++],
+      getFromBuffer(buffer) {
+        return buffer[this.idx++] * 256 + buffer[this.idx++];
+      },
     },
     {
       name: 'currentDirection',
-      label: '',
-      displayType: 'checkmark',
-      getFromBuffer: (buffer) => buffer[this.idx++],
+      label: 'Режим',
+      displayType: 'text',
+      getFromBuffer(buffer) {
+        return buffer[this.idx++] ? 'заряд АКБ' : 'разряд АКБ';
+      },
     },
   ],
   isInvalidBuffer(buffer) {
     for (let i = 0; i < this.separators.length; i++) {
-      if (buffer[i] !== this.separators[i]) return false;
+      if (buffer[i] !== this.separators[i]) return true;
     }
   },
   makeHashMap(buffer) {
+    buffer = new Uint8Array(buffer);
     if (this.isInvalidBuffer(buffer))
       throw new TypeError('wrong data recieved from connection');
-    this.idx = this.separators.length;
+    this.idx = 0;
     return this.entries.reduce((hashMap, entry) => {
-      hashMap[entry.name] = entry.getFromBuffer(buffer);
+      hashMap[entry.name] = entry.getFromBuffer.call(this, buffer);
       return hashMap;
     }, {});
   },

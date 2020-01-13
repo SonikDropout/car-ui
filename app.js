@@ -1,17 +1,21 @@
 const { startWritingTestData, stopWritingTestData } = require('./modules/test');
-const SerialPort = require('virtual-serialport');
+const BluetoothConnection = require('./modules/bluetoothConnection');
+const convertData = require('./modules/dataModel').makeHashMap;
 const fs = require('fs');
 const Loader = require('./pages/loader/loader');
-const Table = require('./pages/table/table');
+const Info = require('./pages/info/info');
 const ErrPage = require('./pages/error/error');
-const Form = require('./pages/form/form');
 const appSettings = require('./settings.json');
+const Gpio = require('pigpio-mock').Gpio;
+
+const GPIO_PIN = 4;
 
 class App {
   constructor(options) {
     this.root = options.root;
     this.settings = options.settings;
     this.portID = options.portID;
+    this.gpio = new Gpio(GPIO_PIN, { mode: Gpio.OUTPUT });
     this.initialize();
   }
 
@@ -19,37 +23,48 @@ class App {
     this.currentPage = new Loader({
       parent: this.root,
     });
-    this.openTestConnection();
+    this.openBluetoothConnection();
   }
 
-  openTestConnection() {
-    this.port = new SerialPort(this.portID, { baudrate: 115200 });
-    this.port.on('open', (err) => {
-      if (err) {
-        this.showErrorPage();
-      } else if (this.settings.groundType) {
-        this.showTablePage();
-      } else {
-        this.showFormPage();
-      }
+  openBluetoothConnection() {
+    this.port = new BluetoothConnection({
+      onError: this.showErrorPage,
+      onData: this.handlebluetoothData,
     });
   }
 
-  showTablePage() {
-    startWritingTestData(this.port);
-    this.currentPage = new Table({
+  handlebluetoothData(data) {
+    document.dispatchEvent(new CustomEvent('bluetoothData', { detal: convertData(data) }));
+  }
+
+  showDataPage() {
+    if (process.env.NODE_ENV === 'development') {
+      startWritingTestData(this.port);
+    }
+    this.currentPage = new Info({
       parent: this.root,
-      port: this.port,
+      driveMode: this.settings.driveMode,
+      onDriveModeChange: this.selectDriveMode.bind(this),
     });
   }
 
-  showFormPage() {
-    stopWritingTestData();
-    this.currentPage = new Form({
-      parent: this.root,
-      onNext: this.showTablePage.bind(this),
-      settings: this.settings,
-    });
+  selectDriveMode(mode) {
+    const [modeName, dutyCycle] = mode.split(';');
+    this.updateSettingsDriveMode(modeName);
+    this.changePWMDutyCycle(dutyCycle);
+  }
+
+  changePWMDutyCycle(dutyCycle) {
+    this.gpio.pwmWrite(dutyCycle);
+  }
+
+  updateSettingsDriveMode(mode) {
+    this.settings.driveMode = mode;
+    fs.writeFile(
+      './settings.json',
+      JSON.stringify(this.settings),
+      Function.prototype
+    );
   }
 
   showErrorPage() {

@@ -26,8 +26,9 @@ const testData = carBuffer.separators.concat([
 const dataByteLengths = testData.map((n) => (n < 256 ? 1 : 2));
 
 function incrementTestData() {
-  for (let i = carBuffer.separators.length; i < testData.length - carBuffer.separators.length; i++) {
-    testData[i] = testDataIncrementers[i](testData[i]);
+  const sepLength = carBuffer.separators.length;
+  for (let i = sepLength; i < testData.length; i++) {
+    testData[i] = testDataIncrementers[i - sepLength](testData[i]);
   }
 }
 
