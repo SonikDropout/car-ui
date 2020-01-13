@@ -78,7 +78,7 @@ module.exports = {
       label: '',
       displayType: 'text',
       getFromBuffer(buffer) {
-        return buffer[this.idx++] ? 'работает' : 'выключено';
+        return buffer[this.idx++] ? 'работает' : 'выключена';
       },
     },
     {
@@ -101,10 +101,10 @@ module.exports = {
     },
     {
       name: 'currentDirection',
-      label: '',
+      label: 'Режим',
       displayType: 'text',
       getFromBuffer(buffer) {
-        return buffer[this.idx++] ? 'зарядка' : 'разрядка';
+        return buffer[this.idx++] ? 'заряд АКБ' : 'разряд АКБ';
       },
     },
   ],

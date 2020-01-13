@@ -1,13 +1,13 @@
 const { app, BrowserWindow, screen } = require('electron');
 
-require('electron-reload')(__dirname);
+require('electron-reload')(__dirname, { ignored: './settings.json' });
 
 function createWindow() {
   const { width, height } = screen.getPrimaryDisplay().workAreaSize;
 
   // Создаем окно браузера.
   let win = new BrowserWindow({
-    width: 640,
+    width: 800,
     height: 480,
     frame: false,
     webPreferences: {
