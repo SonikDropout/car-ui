@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480">
+    <defs>
+        <linearGradient id="a" data-name="Безымянный градиент 9" x1="762.12" y1="42.05" x2="76.12" y2="417.05" gradientTransform="rotate(180 400 240)" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#8fd1ee"/>
+            <stop offset=".57" stop-color="#4eb7e5"/>
+            <stop offset="1" stop-color="#1aa2dd"/>
+        </linearGradient>
+    </defs>
+    <path d="M0 0h800v480c-60.25-36.15-127-83.6-201-120-81.76-40.24-111.07-113.82-204-128-59-9-122.41-63.24-171-89-44.51-23.6-94.67-35.36-137-62C54.27 60.39 37.74 22.64 0 0z" fill="url(#a)"/>
+</svg>

@@ -1,0 +1,116 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --background: radial-gradient(circle at 50%, #abe0e6, #a0daf3);
+  --text-color: #333;
+  --bg-color: white;
+  --corporate-orange: #f07e0f;
+  --corporate-blue: #1aa2dd;
+  --corporate-emerald: rgb(55, 171, 184);
+  --corporate-emerald-darken: #1C5B57;
+  --corporate-light-green: #8bc041;
+  --corporate-blue-darken: #065b8c;
+  --danger-color: #dc3545;
+  --corporate-emerald-medium: #298883;
+  --corporate-grey: #969ba5;
+  --corporate-grey-darken: #74787f;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+html,
+body {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  color: var(--text-color);
+  margin: 0;
+  font-family: 'Montserrat', 'HelveticaNeue', 'Helvetica Neue', Helvetica, Arial,
+    sans-serif;
+  font-size: 1.6rem;
+}
+
+button {
+  background-color: var(--corporate-grey);
+  color: var(--bg-color);
+  border: none;
+  border-radius: 0.4rem;
+  padding: 1.2rem;
+  font-size: 2rem;
+  box-shadow: 0 3px 0 var(--corporate-grey-darken);
+}
+
+button:disabled {
+  opacity: 0.8;
+}
+
+button:active {
+  box-shadow: 0 2px 0 var(--corporate-grey-darken);
+  transform: translateY(1px);
+  outline: none;
+}
+
+button:focus {
+  outline: none;
+}
+
+button .icon {
+  font-size: 1.8rem;
+}
+
+.layout {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.layout main {
+  flex-grow: 2;
+}
+
+header {
+  font-size: 3.6rem;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  height: 8rem;
+  line-height: 8rem;
+  font-family: "Oswald", "Franklin Gothic Medium", "Arial Narrow", Arial,
+  sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: normal;
+  font-family: "Oswald", "Franklin Gothic Medium", "Arial Narrow", Arial,
+  sans-serif;
+}
+
+h3, h4, h5, h6 {
+  font-weight: 300;
+}
+
+@keyframes blink {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360);
+  }
+}

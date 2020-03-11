@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 802.33 480">
+  <defs>
+    <linearGradient id="a" data-name="Безымянный градиент 2" x1="590.77" y1="135.44" x2="32.57" y2="441.4" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#76c7eb"/>
+      <stop offset="0.18" stop-color="#6ec4ea"/>
+      <stop offset="0.45" stop-color="#58bbe6"/>
+      <stop offset="0.78" stop-color="#35ade1"/>
+      <stop offset="1" stop-color="#1aa2dd"/>
+    </linearGradient>
+  </defs>
+  <path d="M243,78c59,68-21,189,36,262,41.34,52.95,325.42,14.74,418,24,130,13,103,116,103,116H0V0S175.61.33,243,78Z" fill="url(#a)"/>
+</svg>

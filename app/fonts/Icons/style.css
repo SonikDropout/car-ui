@@ -1,0 +1,95 @@
+@font-face {
+  font-family: 'icomoon';
+  src:  url('./icomoon.woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-spinner:before {
+  content: "\e917";
+}
+.icon-pan:before {
+  content: "\e914";
+}
+.icon-revert:before {
+  content: "\e915";
+}
+.icon-zoom:before {
+  content: "\e916";
+}
+.icon-tiles:before {
+  content: "\e913";
+}
+.icon-usb:before {
+  content: "\e900";
+}
+.icon-amps:before {
+  content: "\e901";
+}
+.icon-arrow-left:before {
+  content: "\e902";
+}
+.icon-arrow-right:before {
+  content: "\e903";
+}
+.icon-asphalt:before {
+  content: "\e904";
+}
+.icon-battery:before {
+  content: "\e905";
+}
+.icon-car:before {
+  content: "\e906";
+}
+.icon-clock:before {
+  content: "\e907";
+}
+.icon-exclamation:before {
+  content: "\e908";
+}
+.icon-fan:before {
+  content: "\e909";
+}
+.icon-fuelCell:before {
+  content: "\e90a";
+}
+.icon-graph:before {
+  content: "\e90b";
+}
+.icon-ground:before {
+  content: "\e90c";
+}
+.icon-heat:before {
+  content: "\e90d";
+}
+.icon-hydrogen:before {
+  content: "\e90e";
+}
+.icon-lightning:before {
+  content: "\e90f";
+}
+.icon-linoleum:before {
+  content: "\e910";
+}
+.icon-volts:before {
+  content: "\e911";
+}
+.icon-warning:before {
+  content: "\e912";
+}
