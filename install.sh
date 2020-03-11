@@ -1,5 +1,3 @@
-passwd --delete pi
-
 # INSTALL REQUIRED PACKAGES
 apt install npm libudev-dev chromium-borwser xorg
 
@@ -17,29 +15,14 @@ echo '/opt/hydrogen-enrgy/HydrogenEnergy' > ~/.xinitrc
 chmod +x ~/.xinitrc
 
 
-# BOOT SPEED OPTIMIZATIONS
-cat <<EOT >> /boot/config.txt
-max_usb_current=1
-hdmi_group=2
-hdmi_mode=87
-hdmi_cvt 1024 600 60 6 0 0 0
-hdmi_drive=1
-
-enable_uart=1
-EOT
-
-
 if [$1 -eq --optimize]
 then
 cat <<EOT >> /boot/config.txt
 # Disable the rainbow splash screen
 disable_splash=1
 
-# Disable bluetooth
-dtoverlay=pi3-disable-bt
-
 #Disable Wifi
-dtoverlay=pi3-disable-wifi
+dtoverlay=disable-wifi
 
 # Overclock the SD Card from 50 to 100MHz
 # This can only be done with at least a UHS Class 1 card
