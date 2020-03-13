@@ -1,17 +1,17 @@
 # INSTALL REQUIRED PACKAGES
-apt install npm libudev-dev chromium-borwser xorg
+apt-get -y install npm libudev-dev chromium-browser xorg
 
 # MAIN APP INSTALLATION
 npm i
 npm run build
-mkdir /opt/hydrogen-energy
-mv dist/linux-armv7l-unpacked/** /opt/hydrogen-energy/
+mkdir /opt/car-controller
+mv dist/linux-armv7l-unpacked/** /opt/car-controller/
 
 # MAIN APP AUTOSTART
 echo 'su -s /bin/bash -c startx pi&' > /etc/rc.local
-echo 'exit 0' > /etc/rc.local
+echo 'exit 0' >> /etc/rc.local
 echo 'allowed_users=anybody' >> /etc/X11/Xwrapper.config
-echo '/opt/hydrogen-enrgy/HydrogenEnergy' > ~/.xinitrc
+echo 'sudo /opt/car-controller/CarController' > ~/.xinitrc
 chmod +x ~/.xinitrc
 
 

@@ -9,7 +9,7 @@
     "dev": "run-p wp-dev electron-dev",
     "electron-dev": "cross-env NODE_ENV=development electron .",
     "electron-test": "cross-env NODE_ENV=test electron .",
-    "electron-build": "electron-builder --dir --linux --arch=armv7l",
+    "electron-build": "electron-builder --dir --linux --armv7l",
     "build": "run-s wp-build electron-build",
     "test": "jest",
     "postinstall": "electron-builder install-app-deps"
@@ -48,7 +48,7 @@
     "drivelist": "^5.0.0",
     "excel4node": "^1.7.2",
     "noble": "^1.9.1",
-    "pigpio": "^3.0.0",
+    "pigpio": "^0.7.0",
     "usb-detection": "^3.0.0"
   },
   "jest": {
@@ -68,7 +68,7 @@
   },
   "build": {
     "linux": {
-      "executableName": "HydrogenEnergy",
+      "executableName": "CarController",
       "icon": "doc/icon.png",
       "category": "education"
     }
