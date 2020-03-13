@@ -66,7 +66,7 @@ function mockPeripherals() {
   gpio = new EventEmitter();
   gpio.changeDriveMode = dm => console.log('New drive mode:', dm);
   gpio.changeResistancePWM = (key, dutyCycle) =>
-    console.log(`Changing ${key} dutyCycle to ${dutyCycle}`)
+    console.log(`Changing ${key} dutyCycle to ${dutyCycle}`);
   let rpmVal = 800;
   setInterval(() => {
     rpmVal += randInt(-5, 5);
@@ -103,8 +103,7 @@ function addPeripheralsListeners() {
     })
     .on('data', data => win.webContents.send('btData', data))
     .on('error', error => win.webContents.send('error', error));
-  gpio.on('rmpMeasure', rpm => win.webContents.send('rpmMeasure', rpm));
-	gpio.on('rpmMeasure', console.log);
+  gpio.on('rpmMeasure', rpm => win.webContents.send('rpmMeasure', rpm));
   usb
     .on('connect', path => {
       win.webContents.send('usbConnected', path);
