@@ -56,11 +56,7 @@ function initRpiPeripherals() {
   const BluetoothConnector = require('./utils/BluetoothConnector');
   const { GPIOManager, GPIOMock } = require('./utils/GPIOManager');
   bt = new BluetoothConnector();
-  try {
-    gpio = new GPIOManager();
-  } catch (err) {
-    gpio = new GPIOMock();
-  }
+  gpio = new GPIOManager();
 }
 
 function mockPeripherals() {
@@ -107,7 +103,8 @@ function addPeripheralsListeners() {
     })
     .on('data', data => win.webContents.send('btData', data))
     .on('error', error => win.webContents.send('error', error));
-  gpio.on('rmpMesure', rpm => win.webContents.send('rpmMeasure', rpm));
+  gpio.on('rmpMeasure', rpm => win.webContents.send('rpmMeasure', rpm));
+	gpio.on('rpmMeasure', console.log);
   usb
     .on('connect', path => {
       win.webContents.send('usbConnected', path);

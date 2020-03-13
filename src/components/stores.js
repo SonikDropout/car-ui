@@ -63,7 +63,7 @@ const batteryCharge = derived(carData, ($carData) => {
   }
 });
 
-const btConnected = writable(initialState.btConnected);
+const btConnected = writable(true);
 
 const usbPath = writable(initialState.usbPath);
 

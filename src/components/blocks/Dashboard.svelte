@@ -24,7 +24,7 @@
       </label>
       <input
         value={GROUND_RESISTANCE[resistance].dutyCycle}
-        style="display:block; align-self: center"
+        style="display:block; width: 100%;  align-self: center"
         type="number"
         min="0"
         max="255"

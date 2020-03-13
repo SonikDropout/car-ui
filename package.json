@@ -48,7 +48,7 @@
     "drivelist": "^5.0.0",
     "excel4node": "^1.7.2",
     "noble": "^1.9.1",
-    "pigpio": "^0.7.0",
+    "pigpio": "^3.0.0",
     "usb-detection": "^3.0.0"
   },
   "jest": {
