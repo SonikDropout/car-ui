@@ -69,6 +69,8 @@ function mockPeripherals() {
   bt.once('data', bt.emit.bind(bt, 'connected'));
   gpio = new EventEmitter();
   gpio.changeDriveMode = dm => console.log('New drive mode:', dm);
+  gpio.changeResistancePWM = (key, dutyCycle) =>
+    console.log(`Changing ${key} dutyCycle to ${dutyCycle}`)
   let rpmVal = 800;
   setInterval(() => {
     rpmVal += randInt(-5, 5);
@@ -79,6 +81,9 @@ function mockPeripherals() {
 function listenRenderer() {
   ipcMain.on('getAppState', e => (e.returnValue = state));
   ipcMain.on('driveModeChange', (e, dm) => gpio.changeDriveMode(dm));
+  ipcMain.on('changeResistancePWM', (e, key, dutyCycle) =>
+    gpio.changeResistancePWM(key, dutyCycle)
+  );
   ipcMain.on('saveLog', (e, rows) => {
     logger.saveLog(rows, state.usbPath, err => {
       if (err) e.sender.send('saveError', err);

@@ -1,12 +1,66 @@
 <script>
-  import { driveMode, carData, rpm } from "../stores";
-  import { GROUND_RESISTANCE } from "../../constants";
+  import { driveMode, carData, rpm } from '../stores';
+  import { GROUND_RESISTANCE } from '../../constants';
+  import { ipcRenderer } from 'electron';
   export let switchBlock;
+
+  function setResistancePWM(e) {
+    const { name, value } = e.target;
+    ipcRenderer.send('changeResistancePWM', name, value);
+  }
 </script>
+
+<div class="layout">
+
+  <header>Параметры движения автомобиля</header>
+
+  <main>
+    <h3>Имитируемое сопротивление грунта:</h3>
+    {#each Object.keys(GROUND_RESISTANCE) as resistance, i}
+      <label class:selected={resistance === $driveMode}>
+        <input type="radio" value={resistance} bind:group={$driveMode} />
+        <i class="icon icon-{resistance}" />
+        {GROUND_RESISTANCE[resistance].label}
+      </label>
+      <input
+        value={GROUND_RESISTANCE[resistance].dutyCycle}
+        style="display:block; align-self: center"
+        type="number"
+        min="0"
+        max="255"
+        step="1"
+        on:change={setResistancePWM}
+        name={resistance} />
+    {/each}
+    <p>
+      <span>Скорость вращения колес, об/мин:</span>
+      <strong>{$rpm}</strong>
+    </p>
+    <p>
+      <span>{$carData.recuperation.label}:</span>
+      <strong>{$carData.recuperation.value || 'нет'}</strong>
+    </p>
+
+    <button
+      on:click={() => switchBlock('Graph')}
+      class="align-top span-2 first">
+      <i class="icon icon-graph" />
+      Графики
+    </button>
+    <button
+      on:click={() => switchBlock('Characteristics')}
+      class="last span-6 align-top">
+      <i class="icon icon-lightning" />
+      Характеристики системы энергоснабжения
+    </button>
+
+  </main>
+
+</div>
 
 <style>
   .layout {
-    background-image: url("../../../app/backgrounds/dash.svg");
+    background-image: url('../../../app/backgrounds/dash.svg');
   }
   main {
     display: grid;
@@ -56,7 +110,7 @@
     grid-column-start: 2;
   }
 
-  input[type="radio"] {
+  input[type='radio'] {
     position: absolute;
     top: -9999px;
     left: -9999px;
@@ -93,42 +147,3 @@
     box-shadow: 0 1px var(--corporate-emerald-darken);
   }
 </style>
-
-<div class="layout">
-
-  <header>Параметры движения автомобиля</header>
-
-  <main>
-    <h3>Имитируемое сопротивление грунта:</h3>
-    {#each Object.keys(GROUND_RESISTANCE) as resistance, i}
-      <label class:selected={resistance === $driveMode}>
-        <input type="radio" value={resistance} bind:group={$driveMode} />
-        <i class="icon icon-{resistance}" />
-        {GROUND_RESISTANCE[resistance].label}
-      </label>
-    {/each}
-    <p>
-      <span>Скорость вращения колес, об/мин:</span>
-      <strong>{$rpm}</strong>
-    </p>
-    <p>
-      <span>{$carData.recuperation.label}:</span>
-      <strong>{$carData.recuperation.value || 'нет'}</strong>
-    </p>
-
-    <button
-      on:click={() => switchBlock('Graph')}
-      class="align-top span-2 first">
-      <i class="icon icon-graph" />
-      Графики
-    </button>
-    <button
-      on:click={() => switchBlock('Characteristics')}
-      class="last span-6 align-top">
-      <i class="icon icon-lightning" />
-      Характеристики системы энергоснабжения
-    </button>
-
-  </main>
-
-</div>

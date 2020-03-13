@@ -16,6 +16,10 @@ class GPIOManager extends EventEmitter {
     this.countRPM();
   }
 
+  changeResistancePWM(key, dutyCycle) {
+    GROUND_RESISTANCE[key].dutyCycle = dutyCycle;
+  } 
+
   changeDriveMode(mode) {
     this.dmOutput.hardwarePwmWrite(Math.pow(10, 5), GROUND_RESISTANCE[mode].dutyCycle);
     settings.groundResistance = mode;
@@ -44,6 +48,10 @@ class GPIOMock extends EventEmitter {
     this.rpm = 800;
     this.emitMockValue();
   }
+  
+  changeResistancePWM(key, dutyCycle) {
+    console.log(`Changing ${key} dutyCycle to ${dutyCycle}`)
+  } 
 
   emitMockValue() {
     setInterval(() => {
