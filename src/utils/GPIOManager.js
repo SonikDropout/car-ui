@@ -2,7 +2,6 @@ const { Gpio, getTick, tickDiff } = require('pigpio');
 const EventEmitter = require('events');
 const { INPUT_PIN, OUTPUT_PIN, GROUND_RESISTANCE } = require('../constants');
 const { writeFile } = require('fs');
-const path = require('path');
 const { randInt } = require('./numagic');
 
 const settingsPath = '../../settings.json'
@@ -13,12 +12,12 @@ class GPIOManager extends EventEmitter {
     super();
     this.rpmInput = new Gpio(INPUT_PIN, { mode: Gpio.INPUT, alert: true });
     this.dmOutput = new Gpio(OUTPUT_PIN, { mode: Gpio.OUTPUT });
-    this.dmOutput.pwmWrite(GROUND_RESISTANCE[settings.groundResistance].dutyCycle);
+    this.dmOutput.hardwarePwmWrite(Math.pow(10, 5), GROUND_RESISTANCE[settings.groundResistance].dutyCycle);
     this.countRPM();
   }
 
   changeDriveMode(mode) {
-    this.dmOutput.pwmWrite(GROUND_RESISTANCE[mode].dutyCycle);
+    this.dmOutput.hardwarePwmWrite(Math.pow(10, 5), GROUND_RESISTANCE[mode].dutyCycle);
     settings.groundResistance = mode;
     writeFile(settingsPath, JSON.stringify(settings), Function.prototype);
   }

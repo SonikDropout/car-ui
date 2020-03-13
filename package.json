@@ -69,7 +69,6 @@
   "build": {
     "linux": {
       "executableName": "CarController",
-      "icon": "doc/icon.png",
       "category": "education"
     }
   }

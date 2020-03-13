@@ -5,8 +5,8 @@ const SEPARATORS = Buffer.from([161, 178, 195, 195, 212, 247]);
 const SERVICE_UUID = 'ffe0';
 const CHARACTERISTIC_UUID = 'ffe1';
 
-const OUTPUT_PIN = 2;
-const INPUT_PIN = 3;
+const OUTPUT_PIN = 12;
+const INPUT_PIN = 13;
 
 const HYDROGEN_CRITICAL_PRESSURE = 0.3;
 

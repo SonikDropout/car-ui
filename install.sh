@@ -1,5 +1,5 @@
 # INSTALL REQUIRED PACKAGES
-apt-get -y install npm libudev-dev chromium-browser xorg
+apt-get -y install xorg npm midori bluetooth bluez libbluetooth-dev libudev-dev
 
 # MAIN APP INSTALLATION
 npm i
@@ -8,7 +8,8 @@ mkdir /opt/car-controller
 mv dist/linux-armv7l-unpacked/** /opt/car-controller/
 
 # MAIN APP AUTOSTART
-echo 'su -s /bin/bash -c startx pi&' > /etc/rc.local
+echo '#!/bin/sh' > /etc/rc.local
+echo 'su -s /bin/bash -c startx pi&' >> /etc/rc.local
 echo 'exit 0' >> /etc/rc.local
 echo 'allowed_users=anybody' >> /etc/X11/Xwrapper.config
 echo 'sudo /opt/car-controller/CarController' > ~/.xinitrc
@@ -35,7 +36,7 @@ boot_delay=0
 force_turbo=1
 EOT
 
-  echo "quiet" >> /boot/cmdline.txt
+  echo "quiet logo.nologo" >> /boot/cmdline.txt
   systemctl disable dhcpcd.service
   systemctl disable networking.service
   systemctl disable ssh.service
@@ -48,6 +49,4 @@ EOT
   systemctl disable raspi-config.service
   systemctl disable avahi-daemon.service
   systemctl disable triggerhappy.service
-
-  apt-get purge --remove plymouth
 fi
