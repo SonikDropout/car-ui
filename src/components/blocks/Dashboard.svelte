@@ -1,57 +1,43 @@
 <script>
   import { driveMode, carData, rpm } from '../stores';
-  import { GROUND_RESISTANCE } from '../../constants';
+  import { GROUND_RESISTANCE, __ } from '../../constants';
   import { ipcRenderer } from 'electron';
   export let switchBlock;
-
-  function setResistancePWM(e) {
-    const { name, value } = e.target;
-    ipcRenderer.send('changeResistancePWM', name, value);
-  }
 </script>
 
 <div class="layout">
 
-  <header>Параметры движения автомобиля</header>
+  <header>{__('dash title')}</header>
 
   <main>
-    <h3>Имитируемое сопротивление грунта:</h3>
+    <h3>{__('ground type')}</h3>
     {#each Object.keys(GROUND_RESISTANCE) as resistance, i}
       <label class:selected={resistance === $driveMode}>
         <input type="radio" value={resistance} bind:group={$driveMode} />
         <i class="icon icon-{resistance}" />
         {GROUND_RESISTANCE[resistance].label}
       </label>
-      <input
-        value={GROUND_RESISTANCE[resistance].dutyCycle}
-        style="display:block; width: 100%;  align-self: center"
-        type="number"
-        min="0"
-        max="255"
-        step="1"
-        on:change={setResistancePWM}
-        name={resistance} />
     {/each}
     <p>
-      <span>Скорость вращения колес, об/мин:</span>
+      <span>{__('rpm')}</span>
       <strong>{$rpm}</strong>
     </p>
     <p>
-      <span>{$carData.recuperation.label}:</span>
-      <strong>{$carData.recuperation.value || 'нет'}</strong>
+      <span>{__('recuperation')}:</span>
+      <strong>{$carData.recuperation.value || __('no')}</strong>
     </p>
 
     <button
       on:click={() => switchBlock('Graph')}
       class="align-top span-2 first">
       <i class="icon icon-graph" />
-      Графики
+      {__('charts')}
     </button>
     <button
       on:click={() => switchBlock('Characteristics')}
       class="last span-6 align-top">
       <i class="icon icon-lightning" />
-      Характеристики системы энергоснабжения
+      {__('characteristics')}
     </button>
 
   </main>

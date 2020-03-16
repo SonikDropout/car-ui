@@ -1,6 +1,6 @@
 <script>
   import { driveMode, rpm } from "../stores";
-  import { GROUND_RESISTANCE } from "../../constants";
+  import { GROUND_RESISTANCE, __ } from "../../constants";
   let resistance;
   driveMode.subscribe(res => (resistance = GROUND_RESISTANCE[res].label));
 </script>
@@ -22,11 +22,11 @@
 
 <footer>
   <div>
-    <span>Сопротивление грунта:</span>
+    <span>{__('ground type')}:</span>
     <strong>{resistance.toLowerCase()}</strong>
   </div>
   <div>
-    <span>Скорость вращения колес, об/мин: </span>
+    <span>{__('rpm')}: </span>
     <strong>{$rpm}</strong>
   </div>
 </footer>

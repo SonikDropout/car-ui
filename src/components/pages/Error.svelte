@@ -1,7 +1,8 @@
 <script>
-  export let message = "Попробуйте перезагрузить стенд и машинку";
+  import {__} from '../../constants';
+  export let message = __("try reloading");
   export let onConfirm;
-  export let title = "Возникла ошибка в работе стенда";
+  export let title = __("error");
 </script>
 
 <section>
@@ -9,7 +10,7 @@
     <i class="icon icon-exclamation" />
     <h2>{title}</h2>
     <p>{message}</p>
-    <button on:click={onConfirm}>Поробовать снова</button>
+    <button on:click={onConfirm}>{__('try again')}</button>
   </div>
 </section>
 

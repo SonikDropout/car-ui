@@ -4,7 +4,7 @@
   "description": "User interface for drift car",
   "main": "src/main.js",
   "scripts": {
-    "wp-dev": "webpack --watch",
+    "wp-dev": "webpack --watch --display-error-details",
     "wp-build": "cross-env NODE_ENV=production webpack",
     "dev": "run-p wp-dev electron-dev",
     "electron-dev": "cross-env NODE_ENV=development electron .",
@@ -27,7 +27,6 @@
     "css-loader": "^3.4.2",
     "electron": "~1.7.16",
     "electron-builder": "^21.2.0",
-    "electron-rebuild": "^1.10.0",
     "file-loader": "^5.0.2",
     "jest": "^25.1.0",
     "jest-esm-transformer": "^1.0.0",
@@ -47,6 +46,7 @@
     "chartjs-plugin-zoom": "^0.7.5",
     "drivelist": "^5.0.0",
     "excel4node": "^1.7.2",
+    "gettext.js": "^0.9.0",
     "noble": "^1.9.1",
     "pigpio": "^3.0.0",
     "usb-detection": "^3.0.0"

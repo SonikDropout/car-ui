@@ -1,6 +1,7 @@
 <script>
   import { onDestroy } from "svelte";
   import Spinner from "../elements/Spinner";
+  import { __ } from '../../constants';
   let dots = 1;
 </script>
 
@@ -24,6 +25,6 @@
 
 <main>
   <Spinner />
-  <h2>Подключение к машинке...</h2>
-  <div>Пожалуйста, убедитесь что машинка включена и не подключена к телефону.</div>
+  <h2>{__('loading')}</h2>
+  <div>{__('loading hint')}</div>
 </main>

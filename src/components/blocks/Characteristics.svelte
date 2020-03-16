@@ -1,5 +1,6 @@
 <script>
   import { batteryData, fuelCellData, batteryCharge } from "../stores";
+  import { __ } from '../../constants'
   import Footer from "./Footer";
   export let switchBlock;
 </script>
@@ -152,12 +153,12 @@
 
 <div class="layout">
 
-  <header>Характеристики системы энергоснабжения автомобиля</header>
+  <header>{__('characteristics title')}</header>
 
   <main>
     <figure>
       <i class="icon icon-battery" />
-      <figcaption>АКБ</figcaption>
+      <figcaption>{__('battery')}</figcaption>
     </figure>
     <ul>
       {#each $batteryData as row}
@@ -180,7 +181,7 @@
         </li>
       {/each}
       <li>
-        <span>Уровень заряда:</span>
+        <span>{__('charge level')}:</span>
         <strong class="charge-value">{$batteryCharge}%</strong>
         <span class="battery">
           <span
@@ -193,7 +194,7 @@
 
     <figure>
       <i class="icon icon-fuelCell" />
-      <figcaption>БТЭ</figcaption>
+      <figcaption>{__('fuel cell stack')}</figcaption>
     </figure>
     <ul>
       {#each $fuelCellData as row}
@@ -223,7 +224,7 @@
       on:click={() => switchBlock('Dashboard')}
       class="align-top span-2 first">
       <i class="icon icon-arrow-left" />
-      Назад
+      {__('back')}
     </button>
 
   </main>

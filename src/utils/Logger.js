@@ -5,10 +5,11 @@ const {
   STORED_VALUES,
 } = require('../constants');
 const path = require('path');
+const {__} = require('../constants');
 
 class XLSLogger {
   constructor() {
-    this.fileName = 'Машинка';
+    this.fileName = __('car');
     this.workbook = new xl.Workbook();
     this._addWorksheets();
     this._createStyles();
@@ -70,7 +71,7 @@ class XLSLogger {
   _fillFirstRow(worksheet, entries) {
     worksheet
       .cell(1, 1)
-      .string('Время, с')
+      .string(__('time'))
       .style(this.headerStyle);
     let i = 2;
     for (let key in entries) {
@@ -88,10 +89,10 @@ class XLSLogger {
 
   _addWorksheets() {
     this.batteryWorksheet = this.workbook.addWorksheet(
-      'Аккумуляторная батарея'
+      __('battery')
     );
     this.fuelCellWroksheet = this.workbook.addWorksheet(
-      'Батарея топливных элемнтов'
+      __('fuel cell')
     );
   }
 

@@ -5,7 +5,8 @@ const {
   CONNECTION_TIMEOUT,
   CHARACTERISTIC_UUID,
   SERVICE_UUID,
-  SEPARATORS
+  SEPARATORS,
+  __
 } = require('../constants');
 
 class BluetoothConnector extends EventEmitter {
@@ -65,8 +66,8 @@ class BluetoothConnector extends EventEmitter {
       const characteristic = characteristics[0];
       if (!characteristic) {
         this.emit('error', {
-          title: 'При установке соединения возникла ошибка',
-          message: 'Пожалуйста, перезагрузите машинку',
+          title: __('error connecting'),
+          message: __('please reload'),
         });
         return;
       }

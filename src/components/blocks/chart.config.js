@@ -30,7 +30,9 @@ module.exports = function config(points, axesLabels) {
             type: "linear",
             scaleLabel: {
               display: true,
-              labelString: axesLabels.x
+              labelString: axesLabels.x,
+              fontFamily: "'Montserrat', 'Helvetice Neue', 'Helvetica', 'Aria', sans-serif",
+              fontSize: 12,
             },
             ticks: {
               maxTickLimit: 8
@@ -43,7 +45,9 @@ module.exports = function config(points, axesLabels) {
             type: "linear",
             scaleLabel: {
               display: true,
-              labelString: axesLabels.y
+              fontFamily: "'Montserrat', 'Helvetice Neue', 'Helvetica', 'Aria', sans-serif",
+              labelString: axesLabels.y,
+              fontSize: 12,
             },
             ticks: {
               maxTickLimit: 8

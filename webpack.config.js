@@ -9,6 +9,11 @@ module.exports = {
     filename: 'renderer.js',
     path: path.resolve(__dirname, 'app'),
   },
+  target: 'electron-renderer',
+  node: {
+    __dirname: false,
+    __filename: false,
+  },
   resolve: {
     alias: {
       svelte: path.resolve('node_modules', 'svelte'),

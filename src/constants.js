@@ -1,3 +1,8 @@
+const i18n = require('gettext.js/dist/gettext.cjs')({ locale: 'de', domain: 'messages' });
+
+i18n.loadJSON(require('../app/locale/ru.json'), 'messages');
+i18n.loadJSON(require('../app/locale/de.json'), 'messages');
+
 const CONNECTION_TIMEOUT = 30000;
 
 const SEPARATORS = Buffer.from([161, 178, 195, 195, 212, 247]);
@@ -12,8 +17,8 @@ const HYDROGEN_CRITICAL_PRESSURE = 0.3;
 
 const BATTERY_CHARACTERISTICS = {
   batteryVoltage: {
-    label: 'Напряжение',
-    units: 'В',
+    label: i18n.__('voltage'),
+    units: i18n.__('V'),
     type: 'numeric',
     icon: 'volts',
     bytes: 2,
@@ -21,8 +26,8 @@ const BATTERY_CHARACTERISTICS = {
     divider: 1000,
   },
   batteryCurrent: {
-    label: 'Ток',
-    units: 'А',
+    label: i18n.__('current'),
+    units: i18n.__('A'),
     type: 'numeric',
     icon: 'amps',
     bytes: 2,
@@ -30,21 +35,21 @@ const BATTERY_CHARACTERISTICS = {
     divider: 1000,
   },
   batteryMode: {
-    label: 'Режим работы',
+    label: i18n.__('mode'),
     type: 'textFlag',
     bytes: 1,
     offset: 24,
-    posText: 'заряд',
-    negText: 'разряд',
+    posText: i18n.__('charge'),
+    negText: i18n.__('discharge'),
   },
   rechargingAvailable: {
-    label: 'Возможность заряда',
+    label: i18n.__('charge possible'),
     type: 'semaphorFlag',
     bytes: 1,
     offset: 10,
   },
   dischargingAvailable: {
-    label: 'Возможность разряда',
+    label: i18n.__('discharge possible'),
     type: 'semaphorFlag',
     bytes: 1,
     offset: 11,
@@ -53,16 +58,16 @@ const BATTERY_CHARACTERISTICS = {
 
 const FUEL_CELL_CHARACTERISTICS = {
   fuelCellMode: {
-    label: 'Состояние',
+    label: i18n.__('state'),
     type: 'textFlag',
     bytes: 1,
     offset: 19,
-    posText: 'вкл',
-    negText: 'выкл',
+    posText: i18n.__('on'),
+    negText: i18n.__('off'),
   },
   fuelCellVoltage: {
-    label: 'Напряжение',
-    units: 'В',
+    label: i18n.__('voltage'),
+    units: i18n.__('V'),
     type: 'numeric',
     icon: 'volts',
     bytes: 2,
@@ -70,8 +75,8 @@ const FUEL_CELL_CHARACTERISTICS = {
     divider: 1000,
   },
   fuelCellCurrent: {
-    label: 'Ток',
-    units: 'А',
+    label: i18n.__('current'),
+    units: i18n.__('A'),
     type: 'numeric',
     icon: 'amps',
     bytes: 2,
@@ -79,7 +84,7 @@ const FUEL_CELL_CHARACTERISTICS = {
     offset: 14,
   },
   fuelCellTemp: {
-    label: 'Температура',
+    label: i18n.__('temperature'),
     units: '\u2103',
     type: 'numeric',
     icon: 'heat',
@@ -88,7 +93,7 @@ const FUEL_CELL_CHARACTERISTICS = {
     divider: 10,
   },
   fuelCellFan: {
-    label: 'Мощность вентилятора от макс',
+    label: i18n.__('fan power'),
     units: '%',
     type: 'numeric',
     icon: 'fan',
@@ -96,22 +101,22 @@ const FUEL_CELL_CHARACTERISTICS = {
     offset: 18,
   },
   hydrogenConsumption: {
-    label: 'Расход водорода',
-    units: 'мл/мин',
+    label: i18n.__('hydrogen consumption'),
+    units: i18n.__('ml/min'),
     type: 'numeric',
     icon: 'hydrogen',
     bytes: 2,
     offset: 20,
   },
   hydrogenPressure: {
-    label: 'Давление водорода',
-    units: 'атм',
+    label: i18n.__('hydrogen pressure'),
+    units: i18n.__('bar'),
     type: 'restricted',
     bytes: 2,
     offset: 22,
     divider: 1000,
     criticalValue: HYDROGEN_CRITICAL_PRESSURE,
-    warningMessage: 'Пожалуйста, замените балончик!',
+    warningMessage: i18n.__('change cartridge'),
   },
 };
 
@@ -121,12 +126,12 @@ const CAR_CHARACTERISTICS = Object.assign(
   FUEL_CELL_CHARACTERISTICS,
   {
     recuperation: {
-      label: 'Рекуперация',
+      label: i18n.__('recuperation'),
       type: 'textFlag',
       bytes: 1,
       offset: 25,
-      posText: 'есть',
-      negText: 'нет',
+      posText: i18n.__('yes'),
+      negText: i18n.__('no'),
     },
   }
 );
@@ -150,10 +155,10 @@ const STORED_VALUES = [
 STORED_VALUES.numOfBatteryValues = 2;
 
 const GROUND_RESISTANCE = {
-  low: { dutyCycle: 255, label: 'Низкое' },
-  medium: { dutyCycle: 200, label: 'Среднее' },
-  high: { dutyCycle: 100, label: 'Высокое' },
-  veryHigh: { dutyCycle: 150, label: 'Очень высокое' },
+  low: { dutyCycle: 0, label: i18n.__('low') },
+  medium: { dutyCycle: 143, label: i18n.__('medium') },
+  high: { dutyCycle: 148, label: i18n.__('high') },
+  veryHigh: { dutyCycle: 153, label: i18n.__('very high') },
 };
 
 const isPi = process.platform === 'linux' && process.arch === 'arm';
@@ -171,5 +176,6 @@ module.exports = {
   BUFFER_LENGTH,
   INPUT_PIN,
   OUTPUT_PIN,
-  isPi
+  isPi,
+  __: i18n.gettext.bind(i18n),
 };
