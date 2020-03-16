@@ -24,6 +24,8 @@ class GPIOManager extends EventEmitter {
     this.rpsCount = 0;
     this.level = 0;
     this.rpsIntervalStart = Date.now();
+    this.emitRPM = this.emitRPM.bind(this);
+    this.readRPS = this.readRPS.bind(this);
     this.countRPM();
   }
 
@@ -38,8 +40,8 @@ class GPIOManager extends EventEmitter {
   }
 
   countRPM() {
-    setInterval(this.readRPS.bind(this));
-    setTimeout(this.emitRPM.bind(this), 1000);
+    setInterval(this.readRPS);
+    setTimeout(this.emitRPM, 1000);
   }
 
   readRPS() {
