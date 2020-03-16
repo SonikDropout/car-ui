@@ -1,7 +1,5 @@
 const {
   Gpio,
-  getTick,
-  tickDiff,
   CLOCK_PCM,
   configureClock,
 } = require('pigpio');
@@ -17,13 +15,14 @@ class GPIOManager extends EventEmitter {
   constructor() {
     super();
     configureClock(1, CLOCK_PCM);
-    this.rpmInput = new Gpio(INPUT_PIN, { mode: Gpio.INPUT, alert: true });
+    this.rpmInput = new Gpio(INPUT_PIN, { mode: Gpio.INPUT });
     this.dmOutput = new Gpio(OUTPUT_PIN, { mode: Gpio.OUTPUT });
     this.dmOutput.pwmFrequency(20000);
     this.dmOutput.pwmWrite(
       GROUND_RESISTANCE.medium.dutyCycle
     );
     this.rpsCount = 0;
+    this.level = 0;
     this.rpsIntervalStart = Date.now();
     this.countRPM();
   }
@@ -39,18 +38,22 @@ class GPIOManager extends EventEmitter {
   }
 
   countRPM() {
-    this.rpmInput.on('alert', this.handleGPIOAlert.bind(this));
-    setTimeout(this.emitRPM, 1000);
+    setInterval(this.readRPS.bind(this));
+    setTimeout(this.emitRPM.bind(this), 1000);
+  }
+
+  readRPS() {
+    let level = this.rpmInput.digitalRead();
+    if (level != this.level) {
+      this.rpsCount++;
+      this.level = level;
+    }
   }
 
   emitRPM() {
-    this.emit('rpmMeasure', this.rpsCount * 60);
+    this.emit('rpmMeasure', this.rpsCount * 30);
     this.rpsCount = 0;
     setTimeout(this.emitRPM, 1000);
-  }
-
-  handleGPIOAlert(level) {
-    if (!level) this.rpsCount++;
   }
 }
 
