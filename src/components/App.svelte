@@ -9,6 +9,7 @@
   import Characteristics from "./blocks/Characteristics";
 
   let state = "Dashboard";
+  btConnected.subscribe(console.log);
 
   function switchBlock(blockName) {
     state = blockName;
