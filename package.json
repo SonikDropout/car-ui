@@ -46,7 +46,6 @@
     "chartjs-plugin-zoom": "^0.7.5",
     "drivelist": "^5.0.0",
     "excel4node": "^1.7.2",
-    "gettext.js": "^0.9.0",
     "noble": "^1.9.1",
     "pigpio": "^3.0.0",
     "usb-detection": "^3.0.0"

@@ -1,7 +1,9 @@
-const i18n = require('gettext.js/dist/gettext.cjs')({ locale: 'de', domain: 'messages' });
+const path = require('path');
+const i18n = require('./utils/translator');
 
-i18n.loadJSON(require('../app/locale/ru.json'), 'messages');
-i18n.loadJSON(require('../app/locale/de.json'), 'messages');
+i18n.loadJSON(path.join(__dirname, '..', 'locale', 'ru.json'), 'ru');
+i18n.loadJSON(path.join(__dirname, '..', 'locale', 'de.json'), 'de');
+i18n.setLocale('de');
 
 const CONNECTION_TIMEOUT = 30000;
 
@@ -177,5 +179,5 @@ module.exports = {
   INPUT_PIN,
   OUTPUT_PIN,
   isPi,
-  __: i18n.gettext.bind(i18n),
+  __: i18n.__.bind(i18n),
 };
