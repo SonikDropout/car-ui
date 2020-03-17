@@ -12,13 +12,13 @@ class USBDetector extends EventEmitter {
     this._findDrive();
     this._listenAdd.bind(this)();
     this._listenRemove.bind(this)();
-    this._findDrive = delay(this._findDrive, 1000);
+    this._delayedFindDrive = delay(this._findDrive, 1500);
     this.stopMonitoring = usbDetect.stopMonitoring;
   }
 
   _listenAdd() {
     usbDetect.on('add', () => {
-      this._findDrive();
+      this._delayedFindDrive();
     });
   }
 
