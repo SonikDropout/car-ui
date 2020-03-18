@@ -8,7 +8,7 @@ class GPIOManager extends EventEmitter {
     super();
     this.rpmInput = new Gpio(INPUT_PIN, { mode: Gpio.INPUT });
     this.dmOutput = new Gpio(OUTPUT_PIN, { mode: Gpio.OUTPUT });
-    this.dmOutput.hardwarePwmWrite(100000, GROUND_RESISTANCE.medium.dutyCycle);
+    this.dmOutput.hardwarePwmWrite(100000, GROUND_RESISTANCE.low.dutyCycle);
     this.rpsCount = 0;
     this.level = 0;
     this.rpsIntervalStart = Date.now();
@@ -18,7 +18,7 @@ class GPIOManager extends EventEmitter {
   }
 
   changeDriveMode(mode) {
-    this.dmOutput.hardwarePwmWrite(GROUND_RESISTANCE[mode].dutyCycle);
+    this.dmOutput.hardwarePwmWrite(100000, GROUND_RESISTANCE[mode].dutyCycle);
   }
 
   countRPM() {
