@@ -9,7 +9,7 @@
   import Chart from 'chart.js';
   import zoom from 'chartjs-plugin-zoom';
   import getChartConfig from './chart.config';
-  export let switchBlock;
+  export let onPrev;
 
   let isLogSaving, stateToggler, chart;
 
@@ -142,7 +142,7 @@
       {__('save usb')}
     </button>
 
-    <button class="back" on:click={() => switchBlock('Dashboard')}>
+    <button class="back" on:click={onPrev}>
       {__('back')}
       <i class="icon icon-arrow-right" />
     </button>

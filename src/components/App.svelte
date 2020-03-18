@@ -1,17 +1,21 @@
 <script>
-  import Loader from "./pages/Loader";
-  import Info from "./pages/Info";
-  import ErrorPage from "./pages/Error";
-  import { btConnected, appError } from "./stores";
-  import { ipcRenderer } from "electron";
-  import Dashboard from "./blocks/Dashboard";
-  import Graph from "./blocks/Graph";
-  import Characteristics from "./blocks/Characteristics";
+  import Loader from './pages/Loader';
+  import Info from './pages/Info';
+  import ErrorPage from './pages/Error';
+  import { btConnected, appError } from './stores';
+  import { ipcRenderer } from 'electron';
+  import Dashboard from './blocks/Dashboard';
+  import Graph from './blocks/Graph';
+  import Characteristics from './blocks/Characteristics';
 
-  let state = "Dashboard";
+  let slide = 1;
 
-  function switchBlock(blockName) {
-    state = blockName;
+  function incrementSlide() {
+    slide += slide < 2 ? 1 : 0;
+  }
+
+  function decrementSlide() {
+    slide -= slide > 0 ? 1 : 0;
   }
 </script>
 
@@ -20,10 +24,19 @@
 {/if}
 {#if !$btConnected}
   <Loader />
-{:else if state == 'Dashboard'}
-  <Dashboard {switchBlock} />
-{:else if state == 'Graph'}
-  <Graph {switchBlock} />
-{:else if state == 'Characteristics'}
-  <Characteristics {switchBlock} />
+{:else}
+  <div class="slider" style="trasnform: translateX({100 * slide})vw">
+    <Dashboard onNext={incrementSlide} onPrev={decrementSlide} />
+    <Graph onPrev={decrementSlide} />
+    <Characteristics onPrev={decrementSlide} />
+  </div>
 {/if}
+
+<style>
+  .slider {
+    width: 300vw;
+    height: 100vh;
+    display: flex;
+    transition: 0.3s ease-in-out;
+  }
+</style>

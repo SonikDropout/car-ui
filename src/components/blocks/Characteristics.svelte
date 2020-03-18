@@ -2,7 +2,7 @@
   import { batteryData, fuelCellData, batteryCharge } from "../stores";
   import { __ } from '../../constants'
   import Footer from "./Footer";
-  export let switchBlock;
+  export let onPrev;
 </script>
 
 <style>
@@ -221,7 +221,7 @@
       {/each}
     </ul>
     <button
-      on:click={() => switchBlock('Dashboard')}
+      on:click={onPrev}
       class="align-top span-2 first">
       <i class="icon icon-arrow-left" />
       {__('back')}

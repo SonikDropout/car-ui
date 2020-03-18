@@ -2,7 +2,8 @@
   import { driveMode, carData, rpm } from '../stores';
   import { GROUND_RESISTANCE, __ } from '../../constants';
   import { ipcRenderer } from 'electron';
-  export let switchBlock;
+  export let onPrev;
+  export let onNext;
 </script>
 
 <div class="layout">
@@ -28,13 +29,13 @@
     </p>
 
     <button
-      on:click={() => switchBlock('Graph')}
+      on:click={onPrev}
       class="align-top span-2 first">
       <i class="icon icon-graph" />
       {__('charts')}
     </button>
     <button
-      on:click={() => switchBlock('Characteristics')}
+      on:click={onNext}
       class="last span-6 align-top">
       <i class="icon icon-lightning" />
       {__('characteristics')}
