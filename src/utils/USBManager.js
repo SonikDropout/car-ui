@@ -57,7 +57,7 @@ class USBDetector extends EventEmitter {
           console.error('Error mounting device:', stderr);
           return;
         }
-        this.emit('connect', drive.mountpoints[0].path);
+        this.emit('connect', '/media/usb1');
       }
     );
   }
