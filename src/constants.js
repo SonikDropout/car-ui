@@ -158,9 +158,9 @@ STORED_VALUES.numOfBatteryValues = 2;
 
 const GROUND_RESISTANCE = {
   low: { dutyCycle: 0, label: i18n.__('low') },
-  medium: { dutyCycle: 143, label: i18n.__('medium') },
-  high: { dutyCycle: 148, label: i18n.__('high') },
-  veryHigh: { dutyCycle: 153, label: i18n.__('very high') },
+  medium: { dutyCycle: 143 * 4000, label: i18n.__('medium') },
+  high: { dutyCycle: 148 * 4000, label: i18n.__('high') },
+  veryHigh: { dutyCycle: 153 * 4000, label: i18n.__('very high') },
 };
 
 const isPi = process.platform === 'linux' && process.arch === 'arm';

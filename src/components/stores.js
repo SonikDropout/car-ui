@@ -1,49 +1,50 @@
 const { writable, derived } = require('svelte/store');
-const { groundResistance } = require('../../app/settings.json');
 const {
   BATTERY_CHARACTERISTICS,
   FUEL_CELL_CHARACTERISTICS,
   STORED_VALUES,
   CAR_CHARACTERISTICS,
+  IS_RPI,
+  __,
 } = require('../constants');
 const { ipcRenderer } = require('electron');
 const graphPoints = require('../utils/graphDataStorage');
 
 const initialState = ipcRenderer.sendSync('getAppState');
 
-const driveMode = writable(groundResistance || 'medium');
+const driveMode = writable('low');
 
 const carData = writable(CAR_CHARACTERISTICS);
 
 const rpm = writable(0);
 
-const fuelCellData = derived(carData, ($carData) =>
+const fuelCellData = derived(carData, $carData =>
   getArrayOfValues($carData, Object.keys(FUEL_CELL_CHARACTERISTICS))
 );
 
-const batteryData = derived(carData, ($carData) =>
+const batteryData = derived(carData, $carData =>
   getArrayOfValues($carData, Object.keys(BATTERY_CHARACTERISTICS))
 );
 
 let timeStart;
 
-const lastGraphPoints = derived(carData, ($carData) =>
-  STORED_VALUES.map((valName) =>
+const lastGraphPoints = derived(carData, $carData =>
+  STORED_VALUES.map(valName =>
     $carData[valName]
       ? $carData[valName].value
       : (Date.now() - timeStart) / 1000
   )
 );
 
-lastGraphPoints.subscribe((newPoints) => graphPoints.add(newPoints));
+lastGraphPoints.subscribe(newPoints => graphPoints.add(newPoints));
 
 function getArrayOfValues(source, keys) {
-  return keys.map((key) => source[key]);
+  return keys.map(key => source[key]);
 }
 
-const notNegative = (v) => (v < 0 ? 0 : v);
+const notNegative = v => (v < 0 ? 0 : v);
 
-const batteryCharge = derived(carData, ($carData) => {
+const batteryCharge = derived(carData, $carData => {
   const voltage = $carData.batteryVoltage,
     current = $carData.batteryCurrent;
   if (!voltage.value) return 0;
@@ -63,7 +64,7 @@ const batteryCharge = derived(carData, ($carData) => {
   }
 });
 
-const btConnected = writable(initialState.btConnected);
+const btConnected = writable(IS_RPI ? initialState.btConnected : true);
 
 const usbPath = writable(initialState.usbPath);
 
@@ -88,7 +89,7 @@ ipcRenderer.on('usbDisconnected', () => usbPath.set(''));
 ipcRenderer.on('rpmMeasure', (e, val) => rpm.set(val));
 ipcRenderer.on('error', (e, err) => appError.set(err));
 
-driveMode.subscribe((newMode) => ipcRenderer.send('driveModeChange', newMode));
+driveMode.subscribe(newMode => ipcRenderer.send('driveModeChange', newMode));
 
 module.exports = {
   driveMode,
