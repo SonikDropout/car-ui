@@ -47,7 +47,7 @@ class USBDetector extends EventEmitter {
 
   _mountDevice(drive) {
     exec(
-      `sudo mkir /media/usb1\nsudo mount ${drive.device}1 /media/usb1`,
+      `mount ${drive.device}1 /media/usb1`,
       (error, stdout, stderr) => {
         if (error) {
           console.error('Error mounting device:', error.message);

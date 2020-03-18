@@ -25,9 +25,9 @@
 {#if !$btConnected}
   <Loader />
 {:else}
-  <div class="slider" style="trasnform: translateX({100 * slide})vw">
+  <div class="slider" style="transform: translateX(-{100 * slide}vw)">
+    <Graph onPrev={incrementSlide} />
     <Dashboard onNext={incrementSlide} onPrev={decrementSlide} />
-    <Graph onPrev={decrementSlide} />
     <Characteristics onPrev={decrementSlide} />
   </div>
 {/if}
