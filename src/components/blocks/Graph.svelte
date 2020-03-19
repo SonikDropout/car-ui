@@ -1,5 +1,6 @@
 <script>
   import Footer from './Footer';
+  import { fly } from 'svelte/transition';
   import { graphPoints, lastGraphPoints, usbPath } from '../stores';
   import { CAR_CHARACTERISTICS, __ } from '../../constants';
   import { scaleLinear } from '../../utils/numagic';
