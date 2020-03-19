@@ -1,13 +1,93 @@
 <script>
-  import { batteryData, fuelCellData, batteryCharge } from "../stores";
-  import { __ } from '../../constants'
-  import Footer from "./Footer";
+  import { batteryData, fuelCellData, batteryCharge } from '../stores';
+  import { __ } from '../../constants';
+  import Footer from './Footer';
+  import { fly } from 'svelte/transition';
   export let onPrev;
 </script>
 
+<div class="layout">
+
+  <header>{__('characteristics title')}</header>
+
+  <main>
+    <figure>
+      <i class="icon icon-battery" />
+      <figcaption>{__('battery')}</figcaption>
+    </figure>
+    <ul>
+      {#each $batteryData as row}
+        <li>
+          {#if row.type == 'numeric'}
+            <span>
+              {row.label},
+              <em>{row.units}</em>
+              :
+            </span>
+            <strong>{row.value}</strong>
+          {:else if row.type == 'textFlag'}
+            <span>{row.label}:</span>
+            <strong>{row.value}</strong>
+          {:else if row.type == 'semaphoreFlag'}
+            <span>{row.label}:</span>
+            <i class="mark {row.value ? 'check' : 'cross'}" />
+          {/if}
+
+        </li>
+      {/each}
+      <li>
+        <span>{__('charge level')}:</span>
+        <strong class="charge-value">{$batteryCharge}%</strong>
+        <span class="battery">
+          <span
+            class="battery-charge"
+            class:low={$batteryCharge < 30}
+            style="width:{$batteryCharge}%" />
+        </span>
+      </li>
+    </ul>
+
+    <figure>
+      <i class="icon icon-fuelCell" />
+      <figcaption>{__('fuel cell stack')}</figcaption>
+    </figure>
+    <ul>
+      {#each $fuelCellData as row}
+        <li>
+          {#if row.type == 'numeric'}
+            <span>
+              {row.label},
+              <em>{row.units}</em>
+              :
+            </span>
+            <strong>{row.value}</strong>
+          {:else if row.type == 'textFlag'}
+            <span>{row.label}:</span>
+            <strong>{row.value}</strong>
+          {:else if row.type == 'restricted'}
+            <span>{row.label}, {row.units}:</span>
+            <strong>{row.value}</strong>
+            {#if row.value < row.criticalValue}
+              <i class="icon icon-exclamation warning" />
+              <span class="tooltip">{row.warningMessage}</span>
+            {/if}
+          {/if}
+        </li>
+      {/each}
+    </ul>
+    <button on:click={onPrev} class="align-top span-2 first">
+      <i class="icon icon-arrow-left" />
+      {__('back')}
+    </button>
+
+  </main>
+
+  <Footer />
+</div>
+
 <style>
   .layout {
-    background-image: url("../../../app/backgrounds/chars.svg");
+    background-image: url('../../../app/backgrounds/chars.svg');
   }
 
   header {
@@ -103,7 +183,7 @@
   }
 
   .tooltip::after {
-    content: "";
+    content: '';
     border: 5px solid transparent;
     border-top-color: var(--bg-color);
     display: block;
@@ -123,7 +203,7 @@
   }
 
   .battery::after {
-    content: "";
+    content: '';
     display: block;
     position: absolute;
     border: 2px solid var(--bg-color);
@@ -150,84 +230,3 @@
     width: 4rem;
   }
 </style>
-
-<div class="layout">
-
-  <header>{__('characteristics title')}</header>
-
-  <main>
-    <figure>
-      <i class="icon icon-battery" />
-      <figcaption>{__('battery')}</figcaption>
-    </figure>
-    <ul>
-      {#each $batteryData as row}
-        <li>
-          {#if row.type == 'numeric'}
-            <span>
-              {row.label},
-              <em>{row.units}</em>
-              :
-            </span>
-            <strong>{row.value}</strong>
-          {:else if row.type == 'textFlag'}
-            <span>{row.label}:</span>
-            <strong>{row.value}</strong>
-          {:else if row.type == 'semaphoreFlag'}
-            <span>{row.label}:</span>
-            <i class="mark {row.value ? 'check' : 'cross'}" />
-          {/if}
-
-        </li>
-      {/each}
-      <li>
-        <span>{__('charge level')}:</span>
-        <strong class="charge-value">{$batteryCharge}%</strong>
-        <span class="battery">
-          <span
-            class="battery-charge"
-            class:low={$batteryCharge < 30}
-            style="width:{$batteryCharge}%" />
-        </span>
-      </li>
-    </ul>
-
-    <figure>
-      <i class="icon icon-fuelCell" />
-      <figcaption>{__('fuel cell stack')}</figcaption>
-    </figure>
-    <ul>
-      {#each $fuelCellData as row}
-        <li>
-          {#if row.type == 'numeric'}
-            <span>
-              {row.label},
-              <em>{row.units}</em>
-              :
-            </span>
-            <strong>{row.value}</strong>
-          {:else if row.type == 'textFlag'}
-            <span>{row.label}:</span>
-            <strong>{row.value}</strong>
-          {:else if row.type == 'restricted'}
-            <span>{row.label}, {row.units}:</span>
-            <strong>{row.value}</strong>
-            {#if row.value < row.criticalValue}
-              <i class="icon icon-exclamation warning" />
-              <span class="tooltip">{row.warningMessage}</span>
-            {/if}
-          {/if}
-        </li>
-      {/each}
-    </ul>
-    <button
-      on:click={onPrev}
-      class="align-top span-2 first">
-      <i class="icon icon-arrow-left" />
-      {__('back')}
-    </button>
-
-  </main>
-
-  <Footer />
-</div>
