@@ -4,7 +4,7 @@ const {
   FUEL_CELL_CHARACTERISTICS,
   STORED_VALUES,
   CAR_CHARACTERISTICS,
-  IS_RPI,
+  isPi,
   __,
 } = require('../constants');
 const { ipcRenderer } = require('electron');
@@ -64,7 +64,7 @@ const batteryCharge = derived(carData, $carData => {
   }
 });
 
-const btConnected = writable(IS_RPI ? initialState.btConnected : true);
+const btConnected = writable(isPi ? initialState.btConnected : true);
 
 const usbPath = writable(initialState.usbPath);
 
