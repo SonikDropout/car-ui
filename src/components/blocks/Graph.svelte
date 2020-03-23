@@ -1,15 +1,23 @@
 <script>
   import Footer from './Footer';
   import { fly } from 'svelte/transition';
-  import { graphPoints, lastGraphPoints, usbPath } from '../stores';
+  import {
+    graphPoints,
+    lastGraphPoints,
+    usbPath,
+    selectedXId,
+    selectedYId,
+    selectedBlockId,
+  } from '../stores';
   import { CAR_CHARACTERISTICS, __ } from '../../constants';
   import { scaleLinear } from '../../utils/numagic';
   import Select from '../elements/Select';
   import { ipcRenderer } from 'electron';
-  import { onMount } from 'svelte';
+  import { onMount, onDestroy } from 'svelte';
   import Chart from 'chart.js';
   import zoom from 'chartjs-plugin-zoom';
   import getChartConfig from './chart.config';
+  import { selectBlocks, defaultXOption, defaultYOption } from './graphOptions';
   export let onPrev;
 
   let isLogSaving, stateToggler, chart;
@@ -18,62 +26,33 @@
     chart = new Chart(
       document.getElementById('chart').getContext('2d'),
       getChartConfig(graphPoints.points, {
-        x: `${xAxis.label}, ${xAxis.units}`,
-        y: `${yAxis.label}, ${yAxis.units}`,
+        x: `${selectedX.label}, ${selectedX.units}`,
+        y: `${selectedY.label}, ${selectedY.units}`,
       })
     );
     chart.options.onClick = chart.resetZoom;
   });
 
-  const selectBlocks = {
-    fuelCell: {
-      title: __('FCS characteristics'),
-      XOptions: {
-        time: { label: __('time'), units: __('s'), icon: 'clock' },
-        fuelCellCurrent: CAR_CHARACTERISTICS.fuelCellCurrent,
-      },
-      YOptions: {
-        fuelCellCurrent: CAR_CHARACTERISTICS.fuelCellCurrent,
-        fuelCellVoltage: CAR_CHARACTERISTICS.fuelCellVoltage,
-        fuelCellTemp: CAR_CHARACTERISTICS.fuelCellTemp,
-        fuelCellFan: CAR_CHARACTERISTICS.fuelCellFan,
-        hydrogenConsumption: CAR_CHARACTERISTICS.hydrogenConsumption,
-      },
-    },
-    battery: {
-      title: __('battery characteristics'),
-      XOptions: {
-        time: { label: __('time'), units: __('s'), icon: 'clock' },
-        batteryCurrent: CAR_CHARACTERISTICS.fuelCellCurrent,
-      },
-      YOptions: {
-        batteryCurrent: CAR_CHARACTERISTICS.batteryCurrent,
-        batteryVoltage: CAR_CHARACTERISTICS.batteryVoltage,
-      },
-    },
-  };
+  onDestroy(() => {
+    selectedBlockId.set(selectedBlock.id);
+    selectedXId.set(selectedX.id);
+    selectedYId.set(selectedY.id);
+  });
 
-  let selectedBlock = 'battery';
-  let selectedX = 'time';
-  let selectedY = 'batteryVoltage';
+  let selectedBlock = selectBlocks[$selectedBlockId],
+    selectedX = selectedBlock.xOptions[$selectedXId],
+    isScatter = $selectedXId,
+    selectedY = selectedBlock.yOptions[$selectedYId];
 
-  $: xAxis = selectBlocks[selectedBlock].XOptions[selectedX];
-  $: yAxis = selectBlocks[selectedBlock].YOptions[selectedY];
-
-  function updateAxes(name, axis) {
-    if (chart) {
-      chart.options.scales[
-        name + 'Axes'
-      ][0].scaleLabel.labelString = `${axis.label}, ${axis.units}`;
-      chart.update();
-    }
+  function updateAxis(name, options) {
+    chart.options.scales[
+      name + 'Axes'
+    ][0].scaleLabel.labelString = `${options.label}, ${options.units}`;
+    chart.update();
   }
 
-  $: graphPoints.XColumn = selectedX;
-  $: graphPoints.YColumn = selectedY;
-
-  $: updateAxes('x', xAxis);
-  $: updateAxes('y', yAxis);
+  $: graphPoints.XColumn = selectedX.name;
+  $: graphPoints.YColumn = selectedY.name;
 
   lastGraphPoints.subscribe(newPoints => {
     // just to triggre rerender of chart
@@ -83,17 +62,26 @@
     }
   });
 
-  function selectXOption(name, value) {
-    console.log(name, value);
-    selectedX = value;
-    if (name != selectedBlock) selectedY = name + 'Voltage';
-    selectedBlock = name;
+  function selectXOption(blockId, optionId) {
+    if (blockId != selectedBlock.id) {
+      selectedBlock = selectBlocks[blockId];
+      selectedY = selectedBlock.yOptions[0];
+    }
+    if (optionId != selectedX) {
+      selectedX = selectedBlock.xOptions[optionId];
+      updateAxis('x', selectedX);
+    }
   }
 
-  function selectYOption(name, value) {
-    selectedY = value;
-    if (name != selectedBlock) selectedX = 'time';
-    selectedBlock = name;
+  function selectYOption(blockId, optionId) {
+    if (blockId != selectedBlock.id) {
+      selectedBlock = selectBlocks[blockId];
+      selectedX = selectedBlock.xOptions[0];
+    }
+    if (optionId != selectedX) {
+      selectedY = selectedBlock.yOptions[optionId];
+      updateAxis('y', selectedY);
+    }
   }
 
   function saveExcel() {
@@ -112,21 +100,21 @@
   <header>{__('charts title')}</header>
 
   <main>
-    {#each Object.entries(selectBlocks) as [name, block], i}
+    {#each selectBlocks as block, i}
       <fieldset>
         <legend>{block.title}</legend>
         <Select
           onChange={selectXOption}
-          {name}
+          name={i}
           order={i * 2}
-          options={block.XOptions}
-          selected={(name == selectedBlock && block.XOptions[selectedX]) || { label: `-- ${__('x axis')} --` }} />
+          options={block.xOptions}
+          selected={block === selectedBlock ? selectedX : defaultXOption} />
         <Select
           onChange={selectYOption}
-          {name}
+          name={i}
           order={i * 2 + 1}
-          options={block.YOptions}
-          selected={(name == selectedBlock && block.YOptions[selectedY]) || { label: `-- ${__('y axis')} --` }} />
+          options={block.yOptions}
+          selected={block === selectedBlock ? selectedY : defaultYOption} />
       </fieldset>
     {/each}
 

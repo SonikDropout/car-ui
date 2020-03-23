@@ -103,4 +103,7 @@ module.exports = {
   usbPath,
   btConnected,
   graphPoints,
+  selectedXId: writable(0),
+  selectedYId: writable(0),
+  selectedBlockId: writable(0),
 };

@@ -1,5 +1,5 @@
 <script>
-  import { onMount, onDestroy } from "svelte";
+  import { onMount, onDestroy } from 'svelte';
   export let onChange;
   export let options;
   export let disabled;
@@ -8,11 +8,11 @@
   export let name;
 
   onMount(() => {
-    document.addEventListener("click", handleClickOutside);
+    document.addEventListener('click', handleClickOutside);
   });
 
   onDestroy(() => {
-    document.removeEventListener("click", handleClickOutside);
+    document.removeEventListener('click', handleClickOutside);
   });
 
   function handleClickOutside(e) {
@@ -35,7 +35,7 @@
   function drop(node, { duration }) {
     return {
       duration,
-      css: t => `max-height: ${t * h}%`
+      css: t => `max-height: ${t * h}%`,
     };
   }
 
@@ -46,6 +46,33 @@
     onChange(name, v);
   }
 </script>
+
+<div class="select-wrapper">
+  <div
+    style="z-index:{2000 - order}"
+    class="select"
+    bind:this={select}
+    class:disabled
+    class:active
+    class:expand={optionsVisible}>
+    <div class="selected" on:click={toggleOptions}>
+      <span class="value">{selected.label}</span>
+      <span class="arrow" />
+    </div>
+    {#if optionsVisible}
+      <ul transition:drop>
+        {#each options as { icon, label, id }}
+          <li data-value={id} on:click={selectOption} title={label}>
+            {#if icon}
+              <i class="icon icon-{icon}" />
+            {/if}
+            {label}
+          </li>
+        {/each}
+      </ul>
+    {/if}
+  </div>
+</div>
 
 <style>
   .select-wrapper {
@@ -74,18 +101,22 @@
     color: var(--bg-color);
   }
 
-  .curr-value {
+  .selected {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
     padding: 0 2rem;
   }
 
-  .curr-value::after {
-    content: "";
+  .value {
+    flex-grow: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+  }
+
+  .arrow {
     display: block;
     border: 5px solid transparent;
     position: relative;
@@ -93,10 +124,10 @@
     border-top-color: var(--corporate-blue);
     transition: 0.3s ease;
   }
-  .select.active .curr-value::after {
+  .select.active .arrow {
     border-top-color: var(--corporate-blue);
   }
-  .select.expand .curr-value::after {
+  .select.expand .arrow {
     transform: rotate(180deg) translateY(5px);
   }
 
@@ -125,27 +156,3 @@
     min-width: 2.5rem;
   }
 </style>
-
-<div class="select-wrapper">
-  <div
-    style="z-index:{2000 - order}"
-    class="select"
-    bind:this={select}
-    class:disabled
-    class:active
-    class:expand={optionsVisible}>
-    <div class="curr-value" on:click={toggleOptions}>{selected.label}</div>
-    {#if optionsVisible}
-      <ul transition:drop>
-        {#each Object.entries(options) as [value, { icon, label }]}
-          <li data-value={value} on:click={selectOption} title={label}>
-            {#if icon}
-              <i class="icon icon-{icon}" />
-            {/if}
-            {label}
-          </li>
-        {/each}
-      </ul>
-    {/if}
-  </div>
-</div>
