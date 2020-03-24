@@ -1,6 +1,7 @@
 <script>
   import Footer from './Footer';
   import { fly } from 'svelte/transition';
+  import Chart from '../elements/Chart';
   import {
     graphPoints,
     lastGraphPoints,
@@ -14,24 +15,15 @@
   import Select from '../elements/Select';
   import { ipcRenderer } from 'electron';
   import { onMount, onDestroy } from 'svelte';
-  import Chart from 'chart.js';
-  import zoom from 'chartjs-plugin-zoom';
   import getChartConfig from './chart.config';
   import { selectBlocks, defaultXOption, defaultYOption } from './graphOptions';
   export let onPrev;
 
-  let isLogSaving, stateToggler, chart;
+  let isLogSaving,
+    stateToggler,
+    points = graphPoints.points;
 
-  onMount(() => {
-    chart = new Chart(
-      document.getElementById('chart').getContext('2d'),
-      getChartConfig(graphPoints.points, {
-        x: `${selectedX.label}, ${selectedX.units}`,
-        y: `${selectedY.label}, ${selectedY.units}`,
-      })
-    );
-    chart.options.onClick = chart.resetZoom;
-  });
+  lastGraphPoints.subscribe(() => (points = graphPoints.points));
 
   onDestroy(() => {
     selectedBlockId.set(selectedBlock.id);
@@ -44,23 +36,8 @@
     isScatter = $selectedXId,
     selectedY = selectedBlock.yOptions[$selectedYId];
 
-  function updateAxis(name, options) {
-    chart.options.scales[
-      name + 'Axes'
-    ][0].scaleLabel.labelString = `${options.label}, ${options.units}`;
-    chart.update();
-  }
-
   $: graphPoints.XColumn = selectedX.name;
   $: graphPoints.YColumn = selectedY.name;
-
-  lastGraphPoints.subscribe(newPoints => {
-    // just to triggre rerender of chart
-    if (chart) {
-      chart.data.datasets[0].data = graphPoints.points;
-      chart.update();
-    }
-  });
 
   function selectXOption(blockId, optionId) {
     if (blockId != selectedBlock.id) {
@@ -69,7 +46,6 @@
     }
     if (optionId != selectedX) {
       selectedX = selectedBlock.xOptions[optionId];
-      updateAxis('x', selectedX);
     }
   }
 
@@ -80,7 +56,6 @@
     }
     if (optionId != selectedX) {
       selectedY = selectedBlock.yOptions[optionId];
-      updateAxis('y', selectedY);
     }
   }
 
@@ -118,9 +93,12 @@
       </fieldset>
     {/each}
 
-    <div class="chart-wrapper">
-      <canvas id="chart" width="590" height="370" />
-    </div>
+    <Chart
+      type={selectedX.id ? 'scatter' : 'line'}
+      style="grid-area: 1 / 5 / 3 / 12; padding: 0 0 5rem 4rem"
+      {points}
+      xLabel="{selectedX.label}, {selectedX.units}"
+      yLabel="{selectedY.label}, {selectedY.units}" />
 
     <button
       class="save"
@@ -152,11 +130,6 @@
     grid-column-gap: 1.6rem;
     grid-row-gap: 0.8rem;
     grid-template-rows: auto auto 5rem;
-  }
-
-  .chart-wrapper {
-    grid-row: 1 / 3;
-    grid-column: 5 / 12;
   }
 
   button.save {
