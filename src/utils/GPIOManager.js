@@ -6,15 +6,11 @@ const { randInt } = require('./numagic');
 class GPIOManager extends EventEmitter {
   constructor() {
     super();
-    this.rpmInput = new Gpio(INPUT_PIN, { mode: Gpio.INPUT });
+    this.rpmInput = new Gpio(INPUT_PIN, { mode: Gpio.INPUT, timeout: 1000, edge: Gpio.FALLING_EDGE });
     this.dmOutput = new Gpio(OUTPUT_PIN, { mode: Gpio.OUTPUT });
     this.dmOutput.hardwarePwmWrite(100000, GROUND_RESISTANCE.low.dutyCycle);
     this.rpsCount = 0;
-    this.level = 0;
-    this.rpsIntervalStart = Date.now();
-    this.emitRPM = this.emitRPM.bind(this);
-    this.readRPS = this.readRPS.bind(this);
-    this.countRPM();
+    this.rpmInput.on('interrupt', this.handleInterrupt.bind(this));
   }
 
   changeDriveMode(mode) {
@@ -26,18 +22,13 @@ class GPIOManager extends EventEmitter {
     setTimeout(this.emitRPM, 1000);
   }
 
-  readRPS() {
-    let level = this.rpmInput.digitalRead();
-    if (level != this.level) {
+  handleInterrupt(level) {
+    if (level === Gpio.TIMEOUT) {
+      this.emit('rpmMeasure', this.rpsCount * 60);
+      this.rpsCount = 0;
+    } else if (!level) {
       this.rpsCount++;
-      this.level = level;
     }
-  }
-
-  emitRPM() {
-    this.emit('rpmMeasure', this.rpsCount * 30);
-    this.rpsCount = 0;
-    setTimeout(this.emitRPM, 1000);
   }
 }
 
