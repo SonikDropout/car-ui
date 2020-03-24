@@ -7,43 +7,6 @@ module.exports = {
   selectBlocks: [
     {
       id: 0,
-      name: 'battery',
-      title: __('battery characteristics'),
-      xOptions: [
-        {
-          id: 0,
-          name: 'time',
-          label: __('time'),
-          units: __('s'),
-          icon: 'clock',
-        },
-        {
-          id: 1,
-          name: 'batteryCurrent',
-          label: __('current'),
-          units: __('A'),
-          icon: 'amps',
-        },
-      ],
-      yOptions: [
-        {
-          id: 0,
-          name: 'batteryVoltage',
-          label: __('voltage'),
-          units: __('V'),
-          icon: 'volts',
-        },
-        {
-          id: 1,
-          name: 'batteryCurrent',
-          label: __('current'),
-          units: __('A'),
-          icon: 'amps',
-        },
-      ],
-    },
-    {
-      id: 1,
       name: 'fuelCell',
       title: __('FCS characteristics'),
       xOptions: [
@@ -97,6 +60,43 @@ module.exports = {
           label: __('hydrogen consumption'),
           units: __('ml/min'),
           icon: 'hydrogen',
+        },
+      ],
+    },
+    {
+      id: 1,
+      name: 'battery',
+      title: __('battery characteristics'),
+      xOptions: [
+        {
+          id: 0,
+          name: 'time',
+          label: __('time'),
+          units: __('s'),
+          icon: 'clock',
+        },
+        {
+          id: 1,
+          name: 'batteryCurrent',
+          label: __('current'),
+          units: __('A'),
+          icon: 'amps',
+        },
+      ],
+      yOptions: [
+        {
+          id: 0,
+          name: 'batteryVoltage',
+          label: __('voltage'),
+          units: __('V'),
+          icon: 'volts',
+        },
+        {
+          id: 1,
+          name: 'batteryCurrent',
+          label: __('current'),
+          units: __('A'),
+          icon: 'amps',
         },
       ],
     },
