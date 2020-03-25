@@ -48,7 +48,7 @@ module.exports = {
           icon: 'heat',
         },
         {
-          id: 2,
+          id: 3,
           name: 'fuelCellFan',
           label: __('fan power'),
           units: '%',

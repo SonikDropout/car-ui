@@ -159,12 +159,6 @@
     animation: blink 1s linear infinite alternate;
   }
 
-  .warning:hover + .tooltip {
-    opacity: 1;
-    transform: translate(-50%, -5.5rem);
-    visibility: visible;
-  }
-
   .tooltip {
     max-width: 12rem;
     transition: 0.3s ease-in-out;

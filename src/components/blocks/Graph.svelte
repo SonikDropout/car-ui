@@ -15,7 +15,7 @@
   import { ipcRenderer } from 'electron';
   import { onMount, onDestroy } from 'svelte';
   import Chart from 'chart.js';
-  import zoom from 'chartjs-plugin-zoom';
+  import 'chartjs-plugin-zoom';
   import getChartConfig from './chart.config';
   import { selectBlocks, defaultXOption, defaultYOption } from './graphOptions';
   export let onPrev;
@@ -37,6 +37,7 @@
     selectedBlockId.set(selectedBlock.id);
     selectedXId.set(selectedX.id);
     selectedYId.set(selectedY.id);
+    chart.destroy();
   });
 
   let selectedBlock = selectBlocks[$selectedBlockId],
