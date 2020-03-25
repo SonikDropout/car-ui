@@ -4,6 +4,8 @@
   import Footer from './Footer';
   import { fly } from 'svelte/transition';
   export let onPrev;
+
+  let showWarning;
 </script>
 
 <div class="layout">
@@ -68,8 +70,14 @@
             <span>{row.label}, {row.units}:</span>
             <strong>{row.value}</strong>
             {#if row.value < row.criticalValue}
-              <i class="icon icon-exclamation warning" />
-              <span class="tooltip">{row.warningMessage}</span>
+              <i
+                class="icon icon-exclamation warning"
+                on:click={() => (showWarning = !showWarning)} />
+              {#if showWarning}
+                <span transition:fly={{ y: -50 }} class="tooltip">
+                  {row.warningMessage}
+                </span>
+              {/if}
             {/if}
           {/if}
         </li>
@@ -86,10 +94,6 @@
 </div>
 
 <style>
-  .layout {
-    background-image: url('../../../app/backgrounds/chars.svg');
-  }
-
   header {
     margin-bottom: 1rem;
   }
@@ -111,7 +115,6 @@
 
   ul:first-of-type {
     grid-column-start: 2;
-    color: var(--bg-color);
   }
 
   ul:last-of-type {
@@ -140,10 +143,6 @@
     grid-column: span 6;
     text-align: center;
     margin-top: 1rem;
-  }
-
-  figure:first-child figcaption {
-    color: var(--bg-color);
   }
 
   button {
