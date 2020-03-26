@@ -107,13 +107,15 @@
           name={i}
           order={i * 2}
           options={block.xOptions}
-          selected={block === selectedBlock ? selectedX : defaultXOption} />
+          defaultOption={defaultXOption}
+          value={block === selectedBlock ? selectedX.id : void 0} />
         <Select
           onChange={selectYOption}
           name={i}
           order={i * 2 + 1}
           options={block.yOptions}
-          selected={block === selectedBlock ? selectedY : defaultYOption} />
+          defaultOption={defaultYOption}
+          value={block === selectedBlock ? selectedY.id : void 0} />
       </fieldset>
     {/each}
 
