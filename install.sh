@@ -2,6 +2,7 @@
 apt-get -y install xorg npm midori bluetooth bluez libbluetooth-dev libudev-dev
 
 # MAIN APP INSTALLATION
+ELECTRON_MIRROR="https://cdn.npm.taobao.org/dist/electron/"
 npm i
 npm run build
 mkdir /opt/car-controller
