@@ -28,7 +28,7 @@ module.exports = {
       yOptions: [
         {
           id: 0,
-          name: 'fuelCellCurrent',
+          name: 'fuelCellVoltage',
           label: __('voltage'),
           units: __('V'),
           icon: 'volts',
