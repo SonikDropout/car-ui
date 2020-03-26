@@ -12,7 +12,6 @@
     line-height: 5rem;
     font-size: 1.6rem;
     padding: 0 9%;
-    color: var(--bg-color);
   }
 
   div {

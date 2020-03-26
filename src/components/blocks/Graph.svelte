@@ -141,9 +141,6 @@
 </div>
 
 <style>
- .layout {
-   background: url('../../../app/backgrounds/graph.png') no-repeat center/cover;
- }
   main {
     display: grid;
     grid-template-columns: repeat(12, 1fr);

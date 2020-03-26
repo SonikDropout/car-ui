@@ -42,12 +42,6 @@
 </div>
 
 <style>
- .layout {
-   background: url('../../../app/backgrounds/dash.png') no-repeat center/cover;
- }
- header {
-   color: var(--bg-color);
- }
   main {
     display: grid;
     grid-template-columns: repeat(10, 1fr);
@@ -59,7 +53,6 @@
     font-weight: 400;
     font-size: 2.4rem;
     grid-column: span 10;
-    color: var(--bg-color);
   }
   .span-2 {
     grid-column-start: auto;
@@ -84,7 +77,6 @@
   strong {
     grid-column: span 2;
     text-align: center;
-    color: var(--bg-color);
   }
 
   header {

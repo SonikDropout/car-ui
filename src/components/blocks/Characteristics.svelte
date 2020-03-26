@@ -94,12 +94,6 @@
 </div>
 
 <style>
-  .light {
-    color: var(--bg-color);
-  }
-  .layout {
-    background: url('../../../app/backgrounds/chars.png') no-repeat center/cover;
-  }
   header {
     margin-bottom: 1rem;
   }
