@@ -111,10 +111,12 @@
     list-style: none;
     margin: 0;
     padding: 0;
+    font-size: 1.8rem;
+    white-space: nowrap;
+    line-height: 1.5;
   }
 
   ul:first-of-type {
-    color: var(--bg-color);
     grid-column-start: 2;
   }
 
