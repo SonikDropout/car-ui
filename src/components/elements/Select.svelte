@@ -32,18 +32,11 @@
     optionsVisible = !optionsVisible;
   }
 
-  function drop(node, { duration }) {
-    return {
-      duration,
-      css: t => `max-height: ${t * h}%`,
-    };
-  }
-
   function selectOption(e) {
     optionsVisible = false;
     const v = e.target.dataset.value;
     // selected = options[v];
-    onChange(name, v);
+    onChange(v, name);
   }
 </script>
 
@@ -60,7 +53,7 @@
       <span class="arrow" />
     </div>
     {#if optionsVisible}
-      <ul transition:drop>
+      <ul>
         {#each options as { icon, label, id }}
           <li data-value={id} on:click={selectOption} title={label}>
             {#if icon}

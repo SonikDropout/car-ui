@@ -8,7 +8,6 @@ const {
   __,
 } = require('../constants');
 const { ipcRenderer } = require('electron');
-const graphPoints = require('../utils/graphDataStorage');
 
 const initialState = ipcRenderer.sendSync('getAppState');
 
@@ -35,8 +34,6 @@ const lastGraphPoints = derived(carData, $carData =>
       : (Date.now() - timeStart) / 1000
   )
 );
-
-lastGraphPoints.subscribe(newPoints => graphPoints.add(newPoints));
 
 function getArrayOfValues(source, keys) {
   return keys.map(key => source[key]);
@@ -66,7 +63,7 @@ const batteryCharge = derived(carData, $carData => {
 
 const btConnected = writable(isPi ? initialState.btConnected : true);
 
-const usbPath = writable(initialState.usbPath);
+const usbConnected = writable(!!initialState.usbPath);
 
 const appError = writable();
 
@@ -84,8 +81,8 @@ ipcRenderer.on('btData', (e, data) => {
   if (!timeStart) timeStart = Date.now();
   carData.set(data);
 });
-ipcRenderer.on('usbConnected', (e, path) => usbPath.set(path));
-ipcRenderer.on('usbDisconnected', () => usbPath.set(''));
+ipcRenderer.on('usbConnected', () => usbConnected.set(true));
+ipcRenderer.on('usbDisconnected', () => usbConnected.set(false));
 ipcRenderer.on('rpmMeasure', (e, val) => rpm.set(val));
 ipcRenderer.on('error', (e, err) => appError.set(err));
 
@@ -100,9 +97,8 @@ module.exports = {
   batteryCharge,
   lastGraphPoints,
   appError,
-  usbPath,
+  usbConnected,
   btConnected,
-  graphPoints,
   selectedXId: writable(0),
   selectedYId: writable(0),
   selectedBlockId: writable(0),

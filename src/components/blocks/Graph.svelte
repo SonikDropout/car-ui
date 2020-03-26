@@ -2,14 +2,13 @@
   import Footer from './Footer';
   import { fly } from 'svelte/transition';
   import {
-    graphPoints,
     lastGraphPoints,
-    usbPath,
+    usbConnected,
     selectedXId,
     selectedYId,
     selectedBlockId,
   } from '../stores';
-  import { CAR_CHARACTERISTICS, __ } from '../../constants';
+  import { CAR_CHARACTERISTICS, __, STORED_VALUES } from '../../constants';
   import { scaleLinear } from '../../utils/numagic';
   import Select from '../elements/Select';
   import { ipcRenderer } from 'electron';
@@ -18,6 +17,7 @@
   import 'chartjs-plugin-zoom';
   import getChartConfig from './chart.config';
   import { selectBlocks, defaultXOption, defaultYOption } from './graphOptions';
+  import pStorage from '../../utils/graphDataStorage';
   export let onPrev;
 
   let isLogSaving, stateToggler, chart;
@@ -25,7 +25,7 @@
   onMount(() => {
     chart = new Chart(
       document.getElementById('chart').getContext('2d'),
-      getChartConfig(graphPoints.points, {
+      getChartConfig(pStorage.points, {
         x: `${selectedX.label}, ${selectedX.units}`,
         y: `${selectedY.label}, ${selectedY.units}`,
       })
@@ -45,49 +45,47 @@
     isScatter = $selectedXId,
     selectedY = selectedBlock.yOptions[$selectedYId];
 
-  function updateAxis(name, options) {
-    chart.options.scales[
-      name + 'Axes'
-    ][0].scaleLabel.labelString = `${options.label}, ${options.units}`;
+  function updateAxes() {
+    pStorage.XColumn = STORED_VALUES.indexOf(selectedX.name);
+    pStorage.YColumn = STORED_VALUES.indexOf(selectedY.name);
+    chart.options.scales.xAxes[0].scaleLabel.labelString = `${selectedX.label}, ${selectedX.units}`;
+    chart.options.scales.yAxes[0].scaleLabel.labelString = `${selectedY.label}, ${selectedY.units}`;
     chart.update();
   }
 
-  $: graphPoints.XColumn = selectedX.name;
-  $: graphPoints.YColumn = selectedY.name;
-
   lastGraphPoints.subscribe(newPoints => {
-    // just to triggre rerender of chart
+    pStorage.addRow(newPoints);
     if (chart) {
-      chart.data.datasets[0].data = graphPoints.points;
+      chart.data.datasets[0].data = pStorage.points;
       chart.update();
     }
   });
 
-  function selectXOption(blockId, optionId) {
+  function selectXOption(optionId, blockId) {
     if (blockId != selectedBlock.id) {
       selectedBlock = selectBlocks[blockId];
       selectedY = selectedBlock.yOptions[0];
     }
-    if (optionId != selectedX) {
+    if (optionId != selectedX.id) {
       selectedX = selectedBlock.xOptions[optionId];
-      updateAxis('x', selectedX);
     }
+    updateAxes();
   }
 
-  function selectYOption(blockId, optionId) {
+  function selectYOption(optionId, blockId) {
     if (blockId != selectedBlock.id) {
       selectedBlock = selectBlocks[blockId];
       selectedX = selectedBlock.xOptions[0];
     }
-    if (optionId != selectedX) {
+    if (optionId != selectedY.id) {
       selectedY = selectedBlock.yOptions[optionId];
-      updateAxis('y', selectedY);
     }
+    updateAxes();
   }
 
   function saveExcel() {
     isLogSaving = true;
-    ipcRenderer.send('saveLog', graphPoints.rows);
+    ipcRenderer.send('saveLog', pStorage.rows);
     ipcRenderer
       .once('logSaved', () => (isLogSaving = false))
       .once('saveError', err => {
@@ -126,8 +124,8 @@
     <button
       class="save"
       on:click={saveExcel}
-      disabled={!$usbPath}
-      title={$usbPath ? __('write usb') : __('connect usb')}>
+      disabled={!$usbConnected || isLogSaving}
+      title={$usbConnected ? __('write usb') : __('connect usb')}>
       <i class="icon icon-{isLogSaving ? 'spinner' : 'usb'}" />
       {__('save usb')}
     </button>
@@ -143,6 +141,9 @@
 </div>
 
 <style>
+ .layout {
+   background: url('../../../app/backgrounds/graph.png');
+ }
   main {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
