@@ -6,13 +6,14 @@ const {
   CHARACTERISTIC_UUID,
   SERVICE_UUID,
   SEPARATORS,
-  __
+  __,
 } = require('../constants');
 
 class BluetoothConnector extends EventEmitter {
   constructor() {
     super();
     this.timeout = 0;
+    this._connectedDevice = null;
     this.tryOpeningConnection();
   }
 
@@ -47,51 +48,76 @@ class BluetoothConnector extends EventEmitter {
 
   connectToDevice(device) {
     device.connect(err => {
-      if (err) this.emit('error', err);
-      else {
-        device.once('disconnected', this.emit.bind(this, 'disconnected'));
-        device.discoverSomeServicesAndCharacteristics(
-          [SERVICE_UUID],
-          [CHARACTERISTIC_UUID],
-          this.onServicesAndCharacteristicsDiscovered.bind(this)
-        );
+      if (err) {
+        console.error(err.message);
+        this.startScanning();
+        return;
       }
+      device.once('disconnected', () => {
+        this.emit('disconnected');
+        this.startScanning();
+      });
+      device.discoverSomeServicesAndCharacteristics(
+        [SERVICE_UUID],
+        [CHARACTERISTIC_UUID],
+        this.onServicesAndCharacteristicsDiscovered.bind(this)
+      );
     });
   }
 
   onServicesAndCharacteristicsDiscovered(err, services, characteristics) {
-    if (err) this.emit('error', err);
-    else {
-      console.info('Noble discovered characteristic');
-      const characteristic = characteristics[0];
-      if (!characteristic) {
-        this.emit('error', {
-          title: __('error connecting'),
-          message: __('please reload'),
-        });
+    if (err) {
+      this._handleError(err);
+      return;
+    }
+    console.log('Noble discovered characteristic');
+    const characteristic = characteristics[0];
+    if (!characteristic) {
+      this._handleError({ message: 'Characteristic list is empty' });
+      return;
+    }
+    this._subscribeToCharacteristic(characteristic);
+    this._listenCharacteristicData(characteristic);
+  }
+
+  _subscribeToCharacteristic(characteristic) {
+    characteristic.subscribe(err => {
+      if (err) {
+        this._handleError(err);
         return;
       }
-      const handler = new DataHandler();
-      characteristic.subscribe(error => {
-        if (error) this.emit('error', error);
-        else this.emit('connected');
-      });
-      let firstChunk;
-      characteristic.on('data', data => {
-        clearTimeout(this.timeout);
-        this.timeout = setTimeout(() => {
-          this.emit('disconnected');
-        }, CONNECTION_TIMEOUT);
-        if (!firstChunk && data.indexOf(SEPARATORS) == 0) firstChunk = data;
-        else if (firstChunk) {
-          data = handler.getHashMapFromBuffer(
-            Buffer.concat([firstChunk, data])
-          );
-          if (data) this.emit('data', data);
+      console.log('Subscribed to characteristic');
+      this.emit('connected');
+    });
+  }
+
+  _listenCharacteristicData(characteristic) {
+    const parser = new DataHandler();
+    let firstChunk;
+    const handleData = data => {
+      clearTimeout(this.timeout);
+      this.timeout = setTimeout(() => {
+        this.startScanning();
+        this.emit('disconnected');
+      }, CONNECTION_TIMEOUT);
+      if (data.indexOf(SEPARATORS) == 0) firstChunk = data;
+      else if (firstChunk) {
+        try {
+          data = parser.getHashMapFromBuffer(Buffer.concat([firstChunk, data]));
+          this.emit('data', data);
+        } catch (e) {
+          console.error(e.message);
+        } finally {
           firstChunk = null;
         }
-      });
-    }
+      }
+    };
+    characteristic.on('data', handleData);
+  }
+
+  _handleError(err) {
+    console.error(err.message);
+    this.startScanning();
   }
 }
 
