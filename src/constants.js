@@ -5,6 +5,8 @@ i18n.loadJSON(path.join(__dirname, '..', 'locale', 'ru.json'), 'ru');
 i18n.loadJSON(path.join(__dirname, '..', 'locale', 'de.json'), 'de');
 i18n.setLocale('de');
 
+const MAX_POINTS = 10000;
+
 const CONNECTION_TIMEOUT = 30000;
 
 const SEPARATORS = Buffer.from([161, 178, 195, 195, 212, 247]);
@@ -178,6 +180,7 @@ module.exports = {
   BUFFER_LENGTH,
   INPUT_PIN,
   OUTPUT_PIN,
+  MAX_POINTS,
   isPi,
   __: i18n.__.bind(i18n),
 };

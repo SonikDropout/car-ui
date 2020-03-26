@@ -1,3 +1,5 @@
+const { MAX_POINTS } = require('../constants');
+
 class PointsStorage {
   constructor() {
     this.rows = [];
@@ -9,7 +11,7 @@ class PointsStorage {
   addRow(row) {
     this.rows.push(row);
     this.points.push({ x: row[this._xCol], y: row[this._yCol] });
-    if (this.rows.length > 1000) {
+    if (this.rows.length > MAX_POINTS) {
       this.rows.shift();
       this.points.shift();
     }

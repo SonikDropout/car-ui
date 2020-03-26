@@ -68,8 +68,9 @@ function listenRenderer() {
   ipcMain.on('changeResistancePWM', (e, key, dutyCycle) =>
     gpio.changeResistancePWM(key, dutyCycle)
   );
-  ipcMain.on('saveLog', (e, rows) => {
-    logger.saveLog(rows, state.usbPath, err => {
+  ipcMain.on('excelRow', (e, row) => logger.writeRow(row));
+  ipcMain.on('saveLog', () => {
+    logger.saveLog(state.usbPath, err => {
       if (err) e.sender.send('saveError', err);
       else e.sender.send('logSaved');
     });
@@ -78,6 +79,7 @@ function listenRenderer() {
     if (win) win.reload();
     bt.startScanning();
   });
+  ipcMain.on('ejectUSB', usb.eject);
 }
 
 function addPeripheralsListeners() {

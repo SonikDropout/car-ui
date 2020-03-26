@@ -168,12 +168,10 @@
     font-size: 1rem;
     position: absolute;
     left: -2.1rem;
-    transform: translate(-50%, -6rem);
+    transform: translate(-50%, -4rem);
     padding: 0.5rem 1.5rem;
     background: var(--bg-color);
     border-radius: 4px;
-    visibility: hidden;
-    opacity: 0;
     filter: drop-shadow(0 0 4px var(--text-color));
     z-index: 9999;
   }

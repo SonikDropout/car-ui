@@ -20,7 +20,7 @@
   import pStorage from '../../utils/graphDataStorage';
   export let onPrev;
 
-  let isLogSaving, stateToggler, chart;
+  let isLogSaving, stateToggler, chart, savedMessage;
 
   onMount(() => {
     chart = new Chart(
@@ -55,6 +55,7 @@
 
   lastGraphPoints.subscribe(newPoints => {
     pStorage.addRow(newPoints);
+    ipcRenderer.send('excelRow', newPoints);
     if (chart) {
       chart.data.datasets[0].data = pStorage.points;
       chart.update();
@@ -87,14 +88,34 @@
     isLogSaving = true;
     ipcRenderer.send('saveLog', pStorage.rows);
     ipcRenderer
-      .once('logSaved', () => (isLogSaving = false))
+      .once('logSaved', () => {
+        isLogSaving = false;
+        savedMessage = __('save success');
+      })
       .once('saveError', err => {
         isLogSaving = false;
+        savedMessage = __('save error');
       });
+  }
+
+  function ejectUSB() {
+    ipcRenderer.send('ejectUSB');
+    usbConnected = false;
+    savedMessage = void 0;
   }
 </script>
 
 <div class="layout">
+
+  {#if savedMessage}
+    <div class="popup" transition:fly={{ y: -100 }}>
+      <span class="popup-close" on:click={() => (savedMessage = void 0)}>
+        &#x2715;
+      </span>
+      <p>{savedMessage}</p>
+      <button class="eject" on:click={ejectUSB}>{__('eject')}</button>
+    </div>
+  {/if}
 
   <header>{__('charts title')}</header>
 
@@ -182,8 +203,35 @@
     font-size: 2rem;
     font-weight: 500;
     margin-bottom: 2rem;
+    font-family: 'Oswald', sans-serif;
   }
   .icon-spinner {
     animation: spin 1s linear infinite;
+  }
+
+  .popup {
+    position: absolute;
+    background-color: var(--bg-color);
+    top: 3px;
+    left: calc(50% - 15rem);
+    width: 30rem;
+    padding: 0 2rem 1rem;
+    border-radius: 4px;
+    box-shadow: 0 0 6px -1px var(--text-color);
+  }
+  .popup-close {
+    background-color: transparent;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+
+  .eject {
+    font-size: 1.4rem;
+    padding: 0.4rem 0.8rem;
   }
 </style>

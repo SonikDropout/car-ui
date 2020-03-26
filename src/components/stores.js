@@ -18,11 +18,11 @@ const carData = writable(CAR_CHARACTERISTICS);
 const rpm = writable(0);
 
 const fuelCellData = derived(carData, $carData =>
-  getArrayOfValues($carData, Object.keys(FUEL_CELL_CHARACTERISTICS))
+  getValuesByKeys($carData, Object.keys(FUEL_CELL_CHARACTERISTICS))
 );
 
 const batteryData = derived(carData, $carData =>
-  getArrayOfValues($carData, Object.keys(BATTERY_CHARACTERISTICS))
+  getValuesByKeys($carData, Object.keys(BATTERY_CHARACTERISTICS))
 );
 
 let timeStart;
@@ -35,7 +35,7 @@ const lastGraphPoints = derived(carData, $carData =>
   )
 );
 
-function getArrayOfValues(source, keys) {
+function getValuesByKeys(source, keys) {
   return keys.map(key => source[key]);
 }
 

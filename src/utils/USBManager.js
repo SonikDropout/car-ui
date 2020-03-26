@@ -81,10 +81,9 @@ function emitRemove() {
   connectedDevice = void 0;
 }
 
-usbPort.eject = cb => {
+usbPort.eject = () => {
   exec(`sudo eject ${connectedDevice}`, () => {
     connectedDevice = void 0;
-    cb();
   });
 };
 

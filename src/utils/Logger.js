@@ -1,16 +1,16 @@
-const xl = require('excel4node');
+const { Workbook } = require('excel4node');
 const {
   FUEL_CELL_CHARACTERISTICS,
   BATTERY_CHARACTERISTICS,
   STORED_VALUES,
 } = require('../constants');
 const path = require('path');
-const {__} = require('../constants');
+const { __ } = require('../constants');
 
 class XLSLogger {
   constructor() {
     this.fileName = __('car');
-    this.workbook = new xl.Workbook();
+    this.workbook = new Workbook();
     this._addWorksheets();
     this._createStyles();
     this._currentRow = 1;
@@ -48,9 +48,8 @@ class XLSLogger {
     this._currentRow++;
   }
 
-  saveLog(rows, dir, cb = Function.prototype) {
+  saveLog(rows, dir, cb = () => {}) {
     if (!rows || !dir) cb();
-    rows.forEach(this.writeRow.bind(this));
     const date = new Date();
     this.workbook.write(
       path.join(
@@ -88,12 +87,8 @@ class XLSLogger {
   }
 
   _addWorksheets() {
-    this.batteryWorksheet = this.workbook.addWorksheet(
-      __('battery')
-    );
-    this.fuelCellWroksheet = this.workbook.addWorksheet(
-      __('fuel cell')
-    );
+    this.batteryWorksheet = this.workbook.addWorksheet(__('battery'));
+    this.fuelCellWroksheet = this.workbook.addWorksheet(__('fuel cell'));
   }
 
   _validate(values) {
