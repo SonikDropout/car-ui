@@ -1,71 +1,93 @@
 const usbDetect = require('usb-detection');
-const driveList = require('drivelist');
 const EventEmitter = require('events');
 const { exec } = require('child_process');
-const { isPi } = require('../constants');
-const { delay } = require('./others');
+const { debounce } = require('./others');
 
-class USBDetector extends EventEmitter {
-  constructor() {
-    super();
-    usbDetect.startMonitoring();
-    this._findDrive();
-    this._listenAdd.bind(this)();
-    this._listenRemove.bind(this)();
-    this._delayedFindDrive = delay(this._findDrive, 1500);
-    this.stopMonitoring = usbDetect.stopMonitoring;
-  }
+const usbPort = new EventEmitter();
+let connectedDevice;
 
-  _listenAdd() {
-    usbDetect.on('add', () => {
-      this._delayedFindDrive();
-    });
-  }
+const getDriveList = () => new Promise((resolve, reject) => {
+  exec('lsblk -o +path --json', (err, output) => {
+    if (err) reject(err);
+    else resolve(JSON.parse(output).blockdevices);
+  });
+});
 
-  _listenRemove() {
-    usbDetect.on('remove', () => {
-      driveList.list((error, drives) => {
-        if (error) {
-          this.emit('remove');
-          return;
-        }
-        if (!drives.find(drive => drive.device === this.connectedDevice))
-          this.emit('remove');
-      });
-    });
-  }
+Object.defineProperty(usbPort, 'isDeviceConnected', {
+  get: function() {
+    return !!connectedDevice;
+  },
+});
 
-  _findDrive() {
-    driveList.list((error, drives) => {
-      if (error) return;
-      const drive = drives.find(this._isSuitableDrive);
-      if (!drive) return;
-      if (drive.mountpoints[0]) this.emit('connect', drive.mountpoints[0].path);
-      else this._mountDevice(drive);
-    });
-  }
+const debouncedFind = debounce(findDrive, 1500);
 
-  _mountDevice(drive) {
-    exec(
-      `mount ${drive.device}1 /media/usb1`,
-      (error, stdout, stderr) => {
-        if (error) {
-          console.error('Error mounting device:', error.message);
-          return;
-        }
-        if (stderr) {
-          console.error('Error mounting device:', stderr);
-          return;
-        }
-        this.emit('connect', '/media/usb1');
+usbDetect.startMonitoring();
+usbDetect.on('add', debouncedFind);
+usbDetect.on('remove', handleRemove);
+
+function findDrive() {
+  getDriveList()
+    .then(drives => {
+      const device = drives.find(dev => dev.rm);
+      if (!device) return;
+      if (device.children) {
+        connectedDevice = device.children[0].path;
+        mountDevice(connectedDevice);
+      } else {
+        connectedDevice = device.path;
+        mountDevice(connectedDevice);
       }
-    );
-  }
-
-  _isSuitableDrive(drive) {
-    if (isPi) return !drive.system && drive.device.startsWith('/dev/sd');
-    return !drive.system;
-  }
+    })
+    .catch(err => console.error(err.message));
 }
 
-module.exports = USBDetector;
+function mountDevice(device) {
+  exec(
+    `sudo mount ${device} /media/usb1 -o uid=1000`,
+    (error, stdout, stderr) => {
+      if (error) {
+        console.error(error.message);
+        return;
+      }
+      if (stderr) {
+        console.error(stderr);
+        return;
+      }
+      usbPort.emit('add', '/media/usb1');
+    }
+  );
+}
+
+function handleRemove() {
+  getDriveList()
+    .then(devices => {
+      const device = devices.find(dev => dev.rm);
+      if (!device) {
+        emitRemove();
+        return;
+      }
+      if (device.children && device.children[0].path !== connectedDevice)
+        emitRemove();
+      else if (device.path !== connectedDevice) emitRemove();
+    })
+    .catch(err => {
+      console.error(err.message);
+      emitRemove();
+    });
+}
+
+function emitRemove() {
+  usbPort.emit('remove');
+  connectedDevice = void 0;
+}
+
+usbPort.eject = cb => {
+  exec(`sudo eject ${connectedDevice}`, () => {
+    connectedDevice = void 0;
+    cb();
+  });
+};
+
+usbPort.init = findDrive;
+
+module.exports = usbPort;
