@@ -91,7 +91,7 @@ function addPeripheralsListeners() {
     .on('error', error => win.webContents.send('error', error));
   gpio.on('rpmMeasure', rpm => win.webContents.send('rpmMeasure', rpm));
   usb
-    .on('connect', path => {
+    .on('add', path => {
       win.webContents.send('usbConnected');
       state.usbPath = path;
     })
