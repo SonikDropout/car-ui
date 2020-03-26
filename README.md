@@ -21,8 +21,8 @@
 После утановки скачиваем репозиторий коммандой `git clone https://github.com/SonikDropout/car-ui.git`   
 Далее следует постедовательность комманд:  
   `cd car-ui`  
-  `sudo chmod +x install.sh`  
-  `sudo ./install.sh`  
+  `chmod +x install.sh`  
+  `./install.sh`  
 
 Это запустит установочный скрипт. Далее нашего участия не требутеся.
 
