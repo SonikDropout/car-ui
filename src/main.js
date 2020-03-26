@@ -50,7 +50,7 @@ function removeListeners() {
 
 function initRpiPeripherals() {
   const BluetoothConnector = require('./utils/BluetoothConnector');
-  const { GPIOManager } = require('./utils/GPIOManager');
+  const GPIOManager = require('./utils/GPIOManager');
   bt = new BluetoothConnector();
   gpio = new GPIOManager();
 }
