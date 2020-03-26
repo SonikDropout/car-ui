@@ -1,6 +1,6 @@
 <script>
   import {__} from '../../constants';
-  export let message = __("try reloading");
+  export let message = __("try reconnectig");
   export let onConfirm;
   export let title = __("error");
 </script>
@@ -10,7 +10,7 @@
     <i class="icon icon-exclamation" />
     <h2>{title}</h2>
     <p>{message}</p>
-    <button on:click={onConfirm}>{__('try again')}</button>
+    <button on:click={onConfirm}>{__('Ok')}</button>
   </div>
 </section>
 
