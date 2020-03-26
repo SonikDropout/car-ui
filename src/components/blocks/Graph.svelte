@@ -46,8 +46,8 @@
     selectedY = selectedBlock.yOptions[$selectedYId];
 
   function updateAxes() {
-    pStorage.XColumn = STORED_VALUES.indexOf(selectedX.name);
-    pStorage.YColumn = STORED_VALUES.indexOf(selectedY.name);
+    pStorage.setXCol(STORED_VALUES.indexOf(selectedX.name));
+    pStorage.setYCol(STORED_VALUES.indexOf(selectedY.name));
     chart.options.scales.xAxes[0].scaleLabel.labelString = `${selectedX.label}, ${selectedX.units}`;
     chart.options.scales.yAxes[0].scaleLabel.labelString = `${selectedY.label}, ${selectedY.units}`;
     chart.update();
@@ -142,7 +142,7 @@
 
 <style>
  .layout {
-   background: url('../../../app/backgrounds/graph.png');
+   background: url('../../../app/backgrounds/graph.png') no-repeat center/cover;
  }
   main {
     display: grid;

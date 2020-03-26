@@ -15,9 +15,9 @@
   <main>
     <figure>
       <i class="icon icon-battery" />
-      <figcaption>{__('battery')}</figcaption>
+      <figcaption class="light">{__('battery')}</figcaption>
     </figure>
-    <ul>
+    <ul class="light">
       {#each $batteryData as row}
         <li>
           {#if row.type == 'numeric'}
@@ -94,6 +94,12 @@
 </div>
 
 <style>
+  .light {
+    color: var(--bg-color);
+  }
+  .layout {
+    background: url('../../../app/backgrounds/chars.png') no-repeat center/cover;
+  }
   header {
     margin-bottom: 1rem;
   }
@@ -114,6 +120,7 @@
   }
 
   ul:first-of-type {
+    color: var(--bg-color);
     grid-column-start: 2;
   }
 
