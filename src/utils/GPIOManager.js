@@ -9,7 +9,7 @@ class GPIOManager extends EventEmitter {
     this.dmOutput = new Gpio(OUTPUT_PIN, { mode: Gpio.OUTPUT });
     this.dmOutput.hardwarePwmWrite(100000, GROUND_RESISTANCE.low.dutyCycle);
     this.rpsCount = 0;
-    this.intervalStart = Date.now();
+    setInterval(this.emitRPM.bind(this), 1000);
     this.rpmInput.on('alert', this.handleAlert.bind(this));
   }
 
@@ -17,16 +17,14 @@ class GPIOManager extends EventEmitter {
     this.dmOutput.hardwarePwmWrite(100000, GROUND_RESISTANCE[mode].dutyCycle);
   }
 
+  emitRPM() {
+    this.emit('rpmMeasure', this.rpsCount * 60);
+    this.rpsCount = 0;
+    this.intervalStart = now;
+  }
+
   handleAlert(level) {
-    if (level) {
-      this.rpsCount++;
-    }
-    const now = Date.now();
-    if (now - this.intervalStart > 1000) {
-      this.emit('rpmMeasure', this.rpsCount * 60);
-      this.rpsCount = 0;
-      this.intervalStart = now;
-    }
+    if (level) this.rpsCount++;
   }
 }
 
