@@ -1,6 +1,6 @@
 <script>
   import {__} from '../../constants';
-  export let message = __("try reconnectig");
+  export let message = __("try reconnecting");
   export let onConfirm;
   export let title = __("error");
 </script>

@@ -74,7 +74,7 @@ ipcRenderer.on('btConnected', () => {
 });
 ipcRenderer.on('btDisconnected', () => {
   btConnected.set(false);
-  appError.set({ title: __('connection lost'), message: __('try reloading') });
+  appError.set({ title: __('connection lost'), message: __('try reconnecting') });
   timeStart = 0;
 });
 ipcRenderer
