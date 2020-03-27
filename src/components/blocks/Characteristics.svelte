@@ -168,7 +168,7 @@
     font-size: 1rem;
     position: absolute;
     left: -2.1rem;
-    transform: translate(-50%, -4rem);
+    transform: translate(-50%, calc(-100% - 10px));
     padding: 0.5rem 1.5rem;
     background: var(--bg-color);
     border-radius: 4px;

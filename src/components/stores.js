@@ -102,5 +102,5 @@ module.exports = {
   btConnected,
   selectedXId: writable(0),
   selectedYId: writable(0),
-  selectedBlockId: writable(0),
+  selectedBlockId: writable(1),
 };
