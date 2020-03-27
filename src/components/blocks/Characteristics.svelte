@@ -163,12 +163,13 @@
   }
 
   .tooltip {
+    white-space: pre-line;
     max-width: 12rem;
     transition: 0.3s ease-in-out;
     font-size: 1rem;
     position: absolute;
     left: -2.1rem;
-    transform: translate(-50%, calc(-100% - 10px));
+    transform: translate(-50%, calc(-100% - 15px));
     padding: 0.5rem 1.5rem;
     background: var(--bg-color);
     border-radius: 4px;

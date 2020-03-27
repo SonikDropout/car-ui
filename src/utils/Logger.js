@@ -53,8 +53,8 @@ class XLSLogger {
    
   }
 
-  saveLog(rows, dir, cb = () => {}) {
-    if (!rows || !dir) cb();
+  saveLog(dir, cb = () => {}) {
+    if (!dir) cb(new Error('No directory for save was provided'));
     const date = new Date();
     this.workbook.write(
       path.join(

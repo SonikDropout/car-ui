@@ -8,7 +8,7 @@ class DataGenerator extends EventEmitter {
     super();
     this.handler = new DataHander();
     this.intervalID = 0;
-    this.values = [3128, 10261, 0, 0, 1553, 5147, 357, 95, 0, 1443, 2000, 1, 0];
+    this.values = [3128, 10261, 0, 0, 1553, 5147, 357, 95, 0, 1443, 0, 1, 0];
     this.incrementers = [
       n => n - randInt(1),
       n => n - randInt(1),

@@ -49,13 +49,6 @@ module.exports = {
         },
         {
           id: 3,
-          name: 'fuelCellFan',
-          label: __('fan power'),
-          units: '%',
-          icon: 'fan',
-        },
-        {
-          id: 4,
           name: 'hydrogenConsumption',
           label: __('hydrogen consumption'),
           units: __('ml/min'),

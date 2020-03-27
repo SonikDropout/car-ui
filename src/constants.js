@@ -96,14 +96,6 @@ const FUEL_CELL_CHARACTERISTICS = {
     offset: 16,
     divider: 10,
   },
-  fuelCellFan: {
-    label: i18n.__('fan power'),
-    units: '%',
-    type: 'numeric',
-    icon: 'fan',
-    bytes: 1,
-    offset: 18,
-  },
   hydrogenConsumption: {
     label: i18n.__('hydrogen consumption'),
     units: i18n.__('ml/min'),
@@ -134,8 +126,8 @@ const CAR_CHARACTERISTICS = Object.assign(
       type: 'textFlag',
       bytes: 1,
       offset: 25,
-      posText: i18n.__('yes'),
-      negText: i18n.__('no'),
+      posText: i18n.__('no'),
+      negText: i18n.__('yes'),
     },
   }
 );
@@ -152,7 +144,6 @@ const STORED_VALUES = [
   'fuelCellVoltage',
   'fuelCellCurrent',
   'fuelCellTemp',
-  'fuelCellFan',
   'hydrogenConsumption',
 ];
 
@@ -172,7 +163,6 @@ const CHART_CONSTRAINTS = {
   'fuelCellVoltage': [0, 15],
   'fuelCellCurrent': [0, 6],
   'fuelCellTemperature': [0, 60],
-  'fuelCellFan': [0, 100],
   'hydrogenConsumption': [0, 800],
 }
 
