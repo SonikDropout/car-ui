@@ -69,7 +69,7 @@ function listenRenderer() {
     gpio.changeResistancePWM(key, dutyCycle)
   );
   ipcMain.on('excelRow', (e, row) => logger.writeRow(row));
-  ipcMain.on('saveLog', () => {
+  ipcMain.on('saveLog', (e) => {
     logger.saveLog(state.usbPath, err => {
       if (err) e.sender.send('saveError', err);
       else e.sender.send('logSaved');
