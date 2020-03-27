@@ -1,7 +1,6 @@
 const { Gpio } = require('pigpio');
 const EventEmitter = require('events');
 const { INPUT_PIN, OUTPUT_PIN, GROUND_RESISTANCE } = require('../constants');
-const { randInt } = require('./numagic');
 
 class GPIOManager extends EventEmitter {
   constructor() {

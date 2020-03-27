@@ -18,34 +18,39 @@ class XLSLogger {
   }
 
   writeRow(values) {
-    if (!this._validate(values)) return;
+    try {
+      this._validate(values);
 
-    // write time to both worksheets
-    this.batteryWorksheet
-      .cell(this._currentRow, 1)
-      .number(values[0])
-      .style(this.dataStyle);
-    this.fuelCellWroksheet
-      .cell(this._currentRow, 1)
-      .number(values[0])
-      .style(this.dataStyle);
-
-    // write other data
-    for (let i = 1; i < values.length; i++) {
-      if (i < STORED_VALUES.numOfBatteryValues + 1) {
-        this.batteryWorksheet
-          .cell(this._currentRow, i + 1)
-          .number(values[i])
-          .style(this.dataStyle);
-      } else {
-        this.fuelCellWroksheet
-          .cell(this._currentRow, i - STORED_VALUES.numOfBatteryValues + 1)
-          .number(values[i])
-          .style(this.dataStyle);
+      // write time to both worksheets
+      this.batteryWorksheet
+        .cell(this._currentRow, 1)
+        .number(values[0])
+        .style(this.dataStyle);
+      this.fuelCellWroksheet
+        .cell(this._currentRow, 1)
+        .number(values[0])
+        .style(this.dataStyle);
+  
+      // write other data
+      for (let i = 1; i < values.length; i++) {
+        if (i < STORED_VALUES.numOfBatteryValues + 1) {
+          this.batteryWorksheet
+            .cell(this._currentRow, i + 1)
+            .number(values[i])
+            .style(this.dataStyle);
+        } else {
+          this.fuelCellWroksheet
+            .cell(this._currentRow, i - STORED_VALUES.numOfBatteryValues + 1)
+            .number(values[i])
+            .style(this.dataStyle);
+        }
       }
+  
+      this._currentRow++;
+    } catch (e) {
+      console.error('Error writing values', values, ':', e.message);
     }
-
-    this._currentRow++;
+   
   }
 
   saveLog(rows, dir, cb = () => {}) {
@@ -92,7 +97,9 @@ class XLSLogger {
   }
 
   _validate(values) {
-    for (let i = 0; i < values.length; i++) if (isNaN(values[i])) return;
+    for (let i = 0; i < values.length; i++)
+      if (typeof values[i] !== 'number') 
+        throw new Error('Invalid data passed to excel logger!');
     return true;
   }
 

@@ -187,7 +187,7 @@
   }
 
   .battery {
-    border: 2px solid var(--bg-color);
+    border: 2px solid var(--text-color);
     display: inline-block;
     width: 3rem;
     height: 2rem;
@@ -200,7 +200,7 @@
     content: '';
     display: block;
     position: absolute;
-    border: 2px solid var(--bg-color);
+    border: 2px solid var(--text-color);
     border-left: none;
     height: 1rem;
     width: 0.4rem;
@@ -211,7 +211,7 @@
 
   .battery-charge {
     display: block;
-    background-color: var(--bg-color);
+    background-color: var(--text-color);
     height: 100%;
   }
 

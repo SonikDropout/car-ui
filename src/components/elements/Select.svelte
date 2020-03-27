@@ -1,7 +1,6 @@
 <script>
   export let onChange;
   export let options;
-  export let disabled;
   export let value;
   export let name;
   export let defaultOption;
@@ -22,7 +21,7 @@
   }
 </script>
 
-<select {name} class:active {disabled} on:change={selectOption}>
+<select {name} class:active on:change={selectOption}>
   <option class="default" hidden disabled selected={value === void 0}>
     {defaultOption.label}
   </option>
@@ -43,6 +42,8 @@
     padding: 0 1rem;
     margin: 8px 0;
     border: 1px solid var(--corporate-blue-darken);
+    background-color: var(--bg-color);
+    color: var(--text-color);
     outline: none;
     border-radius: 2px;
     font: italic 300 2rem/1.5 'Montserrat';

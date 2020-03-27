@@ -31,7 +31,7 @@ const lastGraphPoints = derived(carData, $carData =>
   STORED_VALUES.map(valName =>
     $carData[valName]
       ? $carData[valName].value
-      : (Date.now() - timeStart) / 1000
+      : (Date.now() - timeStart) / 1000 | 0
   )
 );
 
@@ -77,10 +77,11 @@ ipcRenderer.on('btDisconnected', () => {
   appError.set({ title: __('connection lost'), message: __('try reloading') });
   timeStart = 0;
 });
-ipcRenderer.on('btData', (e, data) => {
-  if (!timeStart) timeStart = Date.now();
-  carData.set(data);
-});
+ipcRenderer
+  .on('btData', (e, data) => {
+    carData.set(data);
+  })
+  .once('btData', () => (timeStart = Date.now()));
 ipcRenderer.on('usbConnected', () => usbConnected.set(true));
 ipcRenderer.on('usbDisconnected', () => usbConnected.set(false));
 ipcRenderer.on('rpmMeasure', (e, val) => rpm.set(val));

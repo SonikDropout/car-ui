@@ -165,6 +165,17 @@ const GROUND_RESISTANCE = {
   veryHigh: { dutyCycle: 153 * 4000, label: i18n.__('very high') },
 };
 
+const CHART_CONSTRAINTS = {
+  'time': [],
+  'batteryVoltage': [6, 9],
+  'batteryCurrent': [0, 20],
+  'fuelCellVoltage': [0, 15],
+  'fuelCellCurrent': [0, 6],
+  'fuelCellTemperature': [0, 60],
+  'fuelCellFan': [0, 100],
+  'hydrogenConsumption': [0, 800],
+}
+
 const isPi = process.platform === 'linux' && process.arch === 'arm';
 
 module.exports = {
@@ -181,6 +192,7 @@ module.exports = {
   INPUT_PIN,
   OUTPUT_PIN,
   MAX_POINTS,
+  CHART_CONSTRAINTS,
   isPi,
   __: i18n.__.bind(i18n),
 };

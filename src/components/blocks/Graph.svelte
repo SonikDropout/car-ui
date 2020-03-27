@@ -8,7 +8,12 @@
     selectedYId,
     selectedBlockId,
   } from '../stores';
-  import { CAR_CHARACTERISTICS, __, STORED_VALUES } from '../../constants';
+  import {
+    CAR_CHARACTERISTICS,
+    __,
+    STORED_VALUES,
+    CHART_CONSTRAINTS,
+  } from '../../constants';
   import { scaleLinear } from '../../utils/numagic';
   import Select from '../elements/Select';
   import { ipcRenderer } from 'electron';
@@ -23,11 +28,21 @@
   let isLogSaving, stateToggler, chart, savedMessage;
 
   onMount(() => {
+    const xRange = CHART_CONSTRAINTS[selectedX.name];
+    const yRange = CHART_CONSTRAINTS[selectedY.name];
     chart = new Chart(
       document.getElementById('chart').getContext('2d'),
       getChartConfig(pStorage.points, {
-        x: `${selectedX.label}, ${selectedX.units}`,
-        y: `${selectedY.label}, ${selectedY.units}`,
+        x: {
+          label: `${selectedX.label}, ${selectedX.units}`,
+          max: xRange[1],
+          min: xRange[0],
+        },
+        y: {
+          label: `${selectedY.label}, ${selectedY.units}`,
+          max: yRange[1],
+          min: yRange[0],
+        },
       })
     );
     chart.options.onClick = chart.resetZoom;
@@ -48,8 +63,18 @@
   function updateAxes() {
     pStorage.setXCol(STORED_VALUES.indexOf(selectedX.name));
     pStorage.setYCol(STORED_VALUES.indexOf(selectedY.name));
+    const xRange = CHART_CONSTRAINTS[selectedX.name];
+    const yRange = CHART_CONSTRAINTS[selectedY.name];
     chart.options.scales.xAxes[0].scaleLabel.labelString = `${selectedX.label}, ${selectedX.units}`;
+    chart.options.scales.xAxes[0].ticks = {
+      suggestedMax: xRange[1],
+      suggestedMin: xRange[0],
+    };
     chart.options.scales.yAxes[0].scaleLabel.labelString = `${selectedY.label}, ${selectedY.units}`;
+    chart.options.scales.yAxes[0].ticks = {
+      suggestedMax: yRange[1],
+      suggestedMin: yRange[0],
+    };
     chart.update();
   }
 
