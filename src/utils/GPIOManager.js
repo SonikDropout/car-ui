@@ -20,7 +20,6 @@ class GPIOManager extends EventEmitter {
   emitRPM() {
     this.emit('rpmMeasure', this.rpsCount * 60);
     this.rpsCount = 0;
-    this.intervalStart = now;
   }
 
   handleAlert(level) {
