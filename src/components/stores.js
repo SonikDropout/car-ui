@@ -17,31 +17,31 @@ const carData = writable(CAR_CHARACTERISTICS);
 
 const rpm = writable(0);
 
-const fuelCellData = derived(carData, $carData =>
+const fuelCellData = derived(carData, ($carData) =>
   getValuesByKeys($carData, Object.keys(FUEL_CELL_CHARACTERISTICS))
 );
 
-const batteryData = derived(carData, $carData =>
+const batteryData = derived(carData, ($carData) =>
   getValuesByKeys($carData, Object.keys(BATTERY_CHARACTERISTICS))
 );
 
 let timeStart;
 
-const lastGraphPoints = derived(carData, $carData =>
-  STORED_VALUES.map(valName =>
+const lastGraphPoints = derived(carData, ($carData) =>
+  STORED_VALUES.map((valName) =>
     $carData[valName]
       ? $carData[valName].value
-      : (Date.now() - timeStart) / 1000 | 0
+      : timeStart++
   )
 );
 
 function getValuesByKeys(source, keys) {
-  return keys.map(key => source[key]);
+  return keys.map((key) => source[key]);
 }
 
-const notNegative = v => (v < 0 ? 0 : v);
+const notNegative = (v) => (v < 0 ? 0 : v);
 
-const batteryCharge = derived(carData, $carData => {
+const batteryCharge = derived(carData, ($carData) => {
   const voltage = $carData.batteryVoltage,
     current = $carData.batteryCurrent;
   if (!voltage.value) return 0;
@@ -68,26 +68,26 @@ const usbConnected = writable(!!initialState.usbPath);
 const appError = writable();
 
 ipcRenderer.on('btConnected', () => {
-  timeStart = Date.now();
   btConnected.set(true);
   appError.set(void 0);
 });
 ipcRenderer.on('btDisconnected', () => {
-  btConnected.set(false);
-  appError.set({ title: __('connection lost'), message: __('try reconnecting') });
   timeStart = 0;
+  btConnected.set(false);
+  appError.set({
+    title: __('connection lost'),
+    message: __('try reconnecting'),
+  });
 });
-ipcRenderer
-  .on('btData', (e, data) => {
-    carData.set(data);
-  })
-  .once('btData', () => (timeStart = Date.now()));
+ipcRenderer.on('btData', (e, data) => {
+  carData.set(data);
+});
 ipcRenderer.on('usbConnected', () => usbConnected.set(true));
 ipcRenderer.on('usbDisconnected', () => usbConnected.set(false));
 ipcRenderer.on('rpmMeasure', (e, val) => rpm.set(val));
 ipcRenderer.on('error', (e, err) => appError.set(err));
 
-driveMode.subscribe(newMode => ipcRenderer.send('driveModeChange', newMode));
+driveMode.subscribe((newMode) => ipcRenderer.send('driveModeChange', newMode));
 
 module.exports = {
   driveMode,
