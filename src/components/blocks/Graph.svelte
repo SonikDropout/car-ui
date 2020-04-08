@@ -124,9 +124,8 @@
   }
 
   function ejectUSB() {
-    ipcRenderer.send('ejectUSB');
-    usbConnected = false;
     savedMessage = void 0;
+    ipcRenderer.send('ejectUSB');
   }
 </script>
 
