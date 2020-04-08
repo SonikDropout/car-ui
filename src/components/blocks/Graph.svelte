@@ -78,7 +78,9 @@
     chart.update();
   }
 
+  let firstSkipted;
   lastGraphPoints.subscribe(newPoints => {
+    if (!firstSkipted) return (firstSkipted = true);
     pStorage.addRow(newPoints);
     ipcRenderer.send('excelRow', newPoints);
     if (chart) {
