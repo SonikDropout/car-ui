@@ -25,7 +25,7 @@ const batteryData = derived(carData, ($carData) =>
   getValuesByKeys($carData, Object.keys(BATTERY_CHARACTERISTICS))
 );
 
-let timeStart;
+let timeStart = 0;
 
 const lastGraphPoints = derived(carData, ($carData) =>
   STORED_VALUES.map((valName) =>
