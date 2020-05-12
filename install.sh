@@ -1,5 +1,5 @@
 # INSTALL REQUIRED PACKAGES
-apt-get -y install xorg npm midori bluetooth bluez libbluetooth-dev libudev-dev
+apt-get -y install xorg midori bluetooth bluez libbluetooth-dev libudev-dev
 
 # MAIN APP INSTALLATION
 npm i
