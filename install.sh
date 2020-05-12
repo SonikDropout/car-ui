@@ -1,5 +1,6 @@
 # INSTALL REQUIRED PACKAGES
-sudo apt-get -y install xorg midori bluetooth bluez libbluetooth-dev libudev-dev
+sudo apt-get update
+sudo apt-get -y install xorg libgconf-2-4 libgtk2.0-0 bluetooth bluez libbluetooth-dev libudev-dev
 
 # MAIN APP INSTALLATION
 npm i
@@ -12,7 +13,7 @@ sudo echo '#!/bin/sh' > /etc/rc.local
 sudo echo 'su -s /bin/bash -c startx pi&' >> /etc/rc.local
 sudo echo 'exit 0' >> /etc/rc.local
 sudo echo 'allowed_users=anybody' >> /etc/X11/Xwrapper.config
-echo '/opt/car-controller/CarController' > ~/.xinitrc
+echo 'sudo /opt/car-controller/CarController' > ~/.xinitrc
 chmod +x ~/.xinitrc
 
 
