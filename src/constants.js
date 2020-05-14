@@ -157,7 +157,7 @@ const GROUND_RESISTANCE = {
 };
 
 const CHART_CONSTRAINTS = {
-  'time': [0, Infinity],
+  'time': [0, 10],
   'batteryVoltage': [6, 9],
   'batteryCurrent': [0, 20],
   'fuelCellVoltage': [0, 15],
