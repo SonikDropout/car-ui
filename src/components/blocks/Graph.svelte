@@ -94,9 +94,7 @@
       selectedBlock = selectBlocks[blockId];
       selectedY = selectedBlock.yOptions[0];
     }
-    if (optionId != selectedX.id) {
-      selectedX = selectedBlock.xOptions[optionId];
-    }
+    selectedX = selectedBlock.xOptions[optionId];
     updateAxes();
   }
 
@@ -105,9 +103,7 @@
       selectedBlock = selectBlocks[blockId];
       selectedX = selectedBlock.xOptions[0];
     }
-    if (optionId != selectedY.id) {
-      selectedY = selectedBlock.yOptions[optionId];
-    }
+    selectedY = selectedBlock.yOptions[optionId];
     updateAxes();
   }
 
