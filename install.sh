@@ -1,6 +1,6 @@
 # INSTALL REQUIRED PACKAGES
 sudo apt-get update
-sudo apt-get -y install xorg libgconf-2-4 libgtk2.0-0 bluetooth bluez libbluetooth-dev libudev-dev
+sudo apt-get -y install xorg libgconf-2-4 libgtk2.0-0 bluetooth bluez libbluetooth-dev libudev-dev pigpio chromium-browser
 
 # MAIN APP INSTALLATION
 npm i
