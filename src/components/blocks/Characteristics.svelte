@@ -4,6 +4,8 @@
   import Footer from './Footer';
   import { fly } from 'svelte/transition';
   export let onPrev;
+
+  let showWarning;
 </script>
 
 <div class="layout">
@@ -13,9 +15,9 @@
   <main>
     <figure>
       <i class="icon icon-battery" />
-      <figcaption>{__('battery')}</figcaption>
+      <figcaption class="light">{__('battery')}</figcaption>
     </figure>
-    <ul>
+    <ul class="light">
       {#each $batteryData as row}
         <li>
           {#if row.type == 'numeric'}
@@ -68,8 +70,14 @@
             <span>{row.label}, {row.units}:</span>
             <strong>{row.value}</strong>
             {#if row.value < row.criticalValue}
-              <i class="icon icon-exclamation warning" />
-              <span class="tooltip">{row.warningMessage}</span>
+              <i
+                class="icon icon-exclamation warning"
+                on:click={() => (showWarning = !showWarning)} />
+              {#if showWarning}
+                <span transition:fly={{ y: -50 }} class="tooltip">
+                  {row.warningMessage}
+                </span>
+              {/if}
             {/if}
           {/if}
         </li>
@@ -86,10 +94,6 @@
 </div>
 
 <style>
-  .layout {
-    background-image: url('../../../app/backgrounds/chars.svg');
-  }
-
   header {
     margin-bottom: 1rem;
   }
@@ -107,11 +111,13 @@
     list-style: none;
     margin: 0;
     padding: 0;
+    font-size: 1.8rem;
+    white-space: nowrap;
+    line-height: 1.5;
   }
 
   ul:first-of-type {
     grid-column-start: 2;
-    color: var(--bg-color);
   }
 
   ul:last-of-type {
@@ -142,10 +148,6 @@
     margin-top: 1rem;
   }
 
-  figure:first-child figcaption {
-    color: var(--bg-color);
-  }
-
   button {
     grid-column-start: 2;
     grid-column-end: span 2;
@@ -160,24 +162,17 @@
     animation: blink 1s linear infinite alternate;
   }
 
-  .warning:hover + .tooltip {
-    opacity: 1;
-    transform: translate(-50%, -5.5rem);
-    visibility: visible;
-  }
-
   .tooltip {
+    white-space: pre-line;
     max-width: 12rem;
     transition: 0.3s ease-in-out;
     font-size: 1rem;
     position: absolute;
     left: -2.1rem;
-    transform: translate(-50%, -6rem);
+    transform: translate(-50%, calc(-100% - 15px));
     padding: 0.5rem 1.5rem;
     background: var(--bg-color);
     border-radius: 4px;
-    visibility: hidden;
-    opacity: 0;
     filter: drop-shadow(0 0 4px var(--text-color));
     z-index: 9999;
   }
@@ -193,7 +188,7 @@
   }
 
   .battery {
-    border: 2px solid var(--bg-color);
+    border: 2px solid var(--text-color);
     display: inline-block;
     width: 3rem;
     height: 2rem;
@@ -206,7 +201,7 @@
     content: '';
     display: block;
     position: absolute;
-    border: 2px solid var(--bg-color);
+    border: 2px solid var(--text-color);
     border-left: none;
     height: 1rem;
     width: 0.4rem;
@@ -217,7 +212,7 @@
 
   .battery-charge {
     display: block;
-    background-color: var(--bg-color);
+    background-color: var(--text-color);
     height: 100%;
   }
 

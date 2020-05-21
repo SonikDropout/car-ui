@@ -28,7 +28,7 @@ module.exports = {
       yOptions: [
         {
           id: 0,
-          name: 'fuelCellCurrent',
+          name: 'fuelCellVoltage',
           label: __('voltage'),
           units: __('V'),
           icon: 'volts',
@@ -48,14 +48,7 @@ module.exports = {
           icon: 'heat',
         },
         {
-          id: 2,
-          name: 'fuelCellFan',
-          label: __('fan power'),
-          units: '%',
-          icon: 'fan',
-        },
-        {
-          id: 4,
+          id: 3,
           name: 'hydrogenConsumption',
           label: __('hydrogen consumption'),
           units: __('ml/min'),
@@ -79,7 +72,7 @@ module.exports = {
           id: 1,
           name: 'batteryCurrent',
           label: __('current'),
-          units: __('A'),
+          units: __('А'),
           icon: 'amps',
         },
       ],

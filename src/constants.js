@@ -3,7 +3,9 @@ const i18n = require('./utils/translator');
 
 i18n.loadJSON(path.join(__dirname, '..', 'locale', 'ru.json'), 'ru');
 i18n.loadJSON(path.join(__dirname, '..', 'locale', 'de.json'), 'de');
-i18n.setLocale('de');
+i18n.setLocale('ru');
+
+const MAX_POINTS = 10000;
 
 const CONNECTION_TIMEOUT = 30000;
 
@@ -94,14 +96,6 @@ const FUEL_CELL_CHARACTERISTICS = {
     offset: 16,
     divider: 10,
   },
-  fuelCellFan: {
-    label: i18n.__('fan power'),
-    units: '%',
-    type: 'numeric',
-    icon: 'fan',
-    bytes: 1,
-    offset: 18,
-  },
   hydrogenConsumption: {
     label: i18n.__('hydrogen consumption'),
     units: i18n.__('ml/min'),
@@ -132,8 +126,8 @@ const CAR_CHARACTERISTICS = Object.assign(
       type: 'textFlag',
       bytes: 1,
       offset: 25,
-      posText: i18n.__('yes'),
-      negText: i18n.__('no'),
+      posText: i18n.__('no'),
+      negText: i18n.__('yes'),
     },
   }
 );
@@ -150,7 +144,6 @@ const STORED_VALUES = [
   'fuelCellVoltage',
   'fuelCellCurrent',
   'fuelCellTemp',
-  'fuelCellFan',
   'hydrogenConsumption',
 ];
 
@@ -162,6 +155,16 @@ const GROUND_RESISTANCE = {
   high: { dutyCycle: 148 * 4000, label: i18n.__('high') },
   veryHigh: { dutyCycle: 153 * 4000, label: i18n.__('very high') },
 };
+
+const CHART_CONSTRAINTS = {
+  'time': [0, 10],
+  'batteryVoltage': [6, 9],
+  'batteryCurrent': [0, 20],
+  'fuelCellVoltage': [0, 15],
+  'fuelCellCurrent': [0, 6],
+  'fuelCellTemperature': [0, 60],
+  'hydrogenConsumption': [0, 800],
+}
 
 const isPi = process.platform === 'linux' && process.arch === 'arm';
 
@@ -178,6 +181,8 @@ module.exports = {
   BUFFER_LENGTH,
   INPUT_PIN,
   OUTPUT_PIN,
+  MAX_POINTS,
+  CHART_CONSTRAINTS,
   isPi,
   __: i18n.__.bind(i18n),
 };

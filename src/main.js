@@ -1,18 +1,14 @@
 const path = require('path');
 const url = require('url');
 const electron = require('electron');
-const USBDetector = require('./utils/USBManager');
+const usb = require('./utils/USBManager');
 const Logger = require('./utils/Logger');
-const DataGenerator = require('./utils/DataGenerator');
-const EventEmitter = require('events');
-const { randInt } = require('./utils/numagic');
 const { isPi } = require('./constants');
 const { app, BrowserWindow, ipcMain } = electron;
 
 let win,
   bt,
   logger,
-  usb,
   gpio,
   state = {};
 
@@ -35,43 +31,35 @@ function reloadOnChange(win) {
 
 function initPeripherals() {
   removeListeners();
-  initLogger();
+  initCommon();
   if (isPi) initRpiPeripherals();
   else mockPeripherals();
   addPeripheralsListeners();
 }
 
-function initLogger() {
+function initCommon() {
   logger = new Logger();
+  usb.init();
 }
 
 function removeListeners() {
   if (bt) bt.removeAllListeners();
-  if (usb) usb.removeAllListeners();
   if (gpio) gpio.removeAllListeners();
+  usb.removeAllListeners();
 }
 
 function initRpiPeripherals() {
-  usb = new USBDetector();
   const BluetoothConnector = require('./utils/BluetoothConnector');
-  const { GPIOManager, GPIOMock } = require('./utils/GPIOManager');
+  const GPIOManager = require('./utils/GPIOManager');
   bt = new BluetoothConnector();
   gpio = new GPIOManager();
 }
 
 function mockPeripherals() {
-  usb = new USBDetector();
+  const DataGenerator = require('./utils/DataGenerator');
   bt = new DataGenerator();
-  bt.once('data', bt.emit.bind(bt, 'connected'));
-  gpio = new EventEmitter();
-  gpio.changeDriveMode = dm => console.log('New drive mode:', dm);
-  gpio.changeResistancePWM = (key, dutyCycle) =>
-    console.log(`Changing ${key} dutyCycle to ${dutyCycle}`);
-  let rpmVal = 800;
-  setInterval(() => {
-    rpmVal += randInt(-5, 5);
-    gpio.emit('rpmMeasure', rpmVal);
-  }, 100);
+  const GPIOMock = require('./utils/GPIO.mock');
+  gpio = new GPIOMock();
 }
 
 function listenRenderer() {
@@ -80,8 +68,9 @@ function listenRenderer() {
   ipcMain.on('changeResistancePWM', (e, key, dutyCycle) =>
     gpio.changeResistancePWM(key, dutyCycle)
   );
-  ipcMain.on('saveLog', (e, rows) => {
-    logger.saveLog(rows, state.usbPath, err => {
+  ipcMain.on('excelRow', (e, row) => logger.writeRow(row));
+  ipcMain.on('saveLog', (e) => {
+    logger.saveLog(state.usbPath, err => {
       if (err) e.sender.send('saveError', err);
       else e.sender.send('logSaved');
     });
@@ -90,29 +79,35 @@ function listenRenderer() {
     if (win) win.reload();
     bt.startScanning();
   });
+  ipcMain.on('ejectUSB', usb.eject);
 }
 
 function addPeripheralsListeners() {
-  bt.on('connected', () => {
-    win.webContents.send('btConnected');
-    state.btConnected = true;
+  listenBtConnect();
+  bt.on('disconnected', () => {
+    win.webContents.send('btDisconnected');
+    state.btConnected = false;
+    listenBtConnect();
   })
-    .on('disconnected', () => {
-      win.webContents.send('btDisconnected');
-      state.btConnected = false;
-    })
     .on('data', data => win.webContents.send('btData', data))
     .on('error', error => win.webContents.send('error', error));
   gpio.on('rpmMeasure', rpm => win.webContents.send('rpmMeasure', rpm));
   usb
-    .on('connect', path => {
-      win.webContents.send('usbConnected', path);
+    .on('add', path => {
+      win.webContents.send('usbConnected');
       state.usbPath = path;
     })
-    .on('remove', path => {
-      win.webContents.send('usbDisconnected', path);
+    .on('remove', () => {
+      win.webContents.send('usbDisconnected');
       state.usbPath = void 0;
     });
+}
+
+function listenBtConnect() {
+  bt.once('data', () => {
+    win.webContents.send('btConnected');
+    state.btConnected = true;
+  });
 }
 
 function launch() {

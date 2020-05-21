@@ -3,23 +3,24 @@ sudo apt-get update
 sudo apt-get -y install xorg libgconf-2-4 libgtk2.0-0 bluetooth bluez libbluetooth-dev libudev-dev pigpio chromium-browser
 
 # MAIN APP INSTALLATION
+ELECTRON_MIRROR="https://cdn.npm.taobao.org/dist/electron/"
 npm i
 npm run build
-sudo mkdir /opt/car-controller
-sudo mv dist/linux-armv7l-unpacked/** /opt/car-controller/
+sudo mkdir /opt/bt-car
+sudo mv dist/linux-armv7l-unpacked/** /opt/bt-car/
 
 # MAIN APP AUTOSTART
 sudo echo '#!/bin/sh' > /etc/rc.local
 sudo echo 'su -s /bin/bash -c startx pi&' >> /etc/rc.local
 sudo echo 'exit 0' >> /etc/rc.local
 sudo echo 'allowed_users=anybody' >> /etc/X11/Xwrapper.config
-echo 'sudo /opt/car-controller/CarController' > ~/.xinitrc
+echo 'sudo /opt/bt-car/CarController' > ~/.xinitrc
 chmod +x ~/.xinitrc
 
 
 if [$1 -eq --optimize]
 then
-cat <<EOT >> /boot/config.txt
+sudo cat <<EOT >> /boot/config.txt
 # Disable the rainbow splash screen
 disable_splash=1
 
@@ -37,17 +38,6 @@ boot_delay=0
 force_turbo=1
 EOT
 
-  echo "quiet logo.nologo" >> /boot/cmdline.txt
-  systemctl disable dhcpcd.service
-  systemctl disable networking.service
-  systemctl disable ssh.service
-  systemctl disable ntp.service
-  systemctl disable dphys-swapfile.service
-  systemctl disable keyboard-setup.service
-  systemctl disable apt-daily.service
-  systemctl disable wifi-country.service
-  systemctl disable hciuart.service
-  systemctl disable raspi-config.service
-  systemctl disable avahi-daemon.service
-  systemctl disable triggerhappy.service
+  sudo echo "quiet logo.nologo" >> /boot/cmdline.txt
+  sudo systemctl disable dhcpcd.service networking.service ssh.service ntp.service dphys-swapfile.service keyboard-setup.service apt-daily.service wifi-country.service hciuart.service raspi-config.service avahi-daemon.service triggerhappy.service
 fi

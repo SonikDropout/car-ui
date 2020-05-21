@@ -1,4 +1,4 @@
-module.exports = function config(points, axesLabels) {
+module.exports = function config(points, axes) {
   return {
     type: 'line',
     data: {
@@ -31,13 +31,15 @@ module.exports = function config(points, axesLabels) {
             type: 'linear',
             scaleLabel: {
               display: true,
-              labelString: axesLabels.x,
+              labelString: axes.x.label,
               fontFamily:
                 "'Montserrat', 'Helvetice Neue', 'Helvetica', 'Aria', sans-serif",
               fontSize: 12,
             },
             ticks: {
               maxTickLimit: 8,
+              suggestedMax: axes.x.max,
+              suggestedMin: axes.x.min,
             },
           },
         ],
@@ -49,11 +51,13 @@ module.exports = function config(points, axesLabels) {
               display: true,
               fontFamily:
                 "'Montserrat', 'Helvetice Neue', 'Helvetica', 'Aria', sans-serif",
-              labelString: axesLabels.y,
+              labelString: axes.y.label,
               fontSize: 12,
             },
             ticks: {
               maxTickLimit: 8,
+              suggestedMax: axes.y.max,
+              suggestedMin: axes.y.min,
             },
           },
         ],

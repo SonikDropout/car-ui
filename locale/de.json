@@ -27,8 +27,8 @@
   "time": "Zeit",
   "save usb": "Speichern der Daten auf ein USB-Gerät",
   "connection lost": "Verbindung unterbrochen",
-  "try reconnectig": "Starten Sie das Gerät neu.",
-  "change cartidge": "Bitte wechseln Sie H2-Speicher!",
+  "try reconnecting": "Starten Sie das Gerät neu.",
+  "change cartridge": "Bitte wechseln\nSie H2-Speicher!",
   "V": "V",
   "A": "A",
   "yes": "vorhanden",
@@ -52,5 +52,8 @@
   "connect usb": "Bitte schließen Sie ein USB-Speichermedium an",
   "back": "Zurück",
   "y axis": "y-Achse",
-  "x axis": "x-Achse"
+  "x axis": "x-Achse",
+  "save success": "Datei wurde erfolgreich gespeichert",
+  "save error": "Speichern der Datei ist fehlgeschlagen",
+  "eject": "Auswerfen"
 }

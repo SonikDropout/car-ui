@@ -1,16 +1,16 @@
-const xl = require('excel4node');
+const { Workbook } = require('excel4node');
 const {
   FUEL_CELL_CHARACTERISTICS,
   BATTERY_CHARACTERISTICS,
   STORED_VALUES,
 } = require('../constants');
 const path = require('path');
-const {__} = require('../constants');
+const { __ } = require('../constants');
 
 class XLSLogger {
   constructor() {
     this.fileName = __('car');
-    this.workbook = new xl.Workbook();
+    this.workbook = new Workbook();
     this._addWorksheets();
     this._createStyles();
     this._currentRow = 1;
@@ -18,39 +18,43 @@ class XLSLogger {
   }
 
   writeRow(values) {
-    if (!this._validate(values)) return;
+    try {
+      this._validate(values);
 
-    // write time to both worksheets
-    this.batteryWorksheet
-      .cell(this._currentRow, 1)
-      .number(values[0])
-      .style(this.dataStyle);
-    this.fuelCellWroksheet
-      .cell(this._currentRow, 1)
-      .number(values[0])
-      .style(this.dataStyle);
-
-    // write other data
-    for (let i = 1; i < values.length; i++) {
-      if (i < STORED_VALUES.numOfBatteryValues + 1) {
-        this.batteryWorksheet
-          .cell(this._currentRow, i + 1)
-          .number(values[i])
-          .style(this.dataStyle);
-      } else {
-        this.fuelCellWroksheet
-          .cell(this._currentRow, i - STORED_VALUES.numOfBatteryValues + 1)
-          .number(values[i])
-          .style(this.dataStyle);
+      // write time to both worksheets
+      this.batteryWorksheet
+        .cell(this._currentRow, 1)
+        .number(values[0])
+        .style(this.dataStyle);
+      this.fuelCellWroksheet
+        .cell(this._currentRow, 1)
+        .number(values[0])
+        .style(this.dataStyle);
+  
+      // write other data
+      for (let i = 1; i < values.length; i++) {
+        if (i < STORED_VALUES.numOfBatteryValues + 1) {
+          this.batteryWorksheet
+            .cell(this._currentRow, i + 1)
+            .number(values[i])
+            .style(this.dataStyle);
+        } else {
+          this.fuelCellWroksheet
+            .cell(this._currentRow, i - STORED_VALUES.numOfBatteryValues + 1)
+            .number(values[i])
+            .style(this.dataStyle);
+        }
       }
+  
+      this._currentRow++;
+    } catch (e) {
+      console.error('Error writing values', values, ':', e.message);
     }
-
-    this._currentRow++;
+   
   }
 
-  saveLog(rows, dir, cb = Function.prototype) {
-    if (!rows || !dir) cb();
-    rows.forEach(this.writeRow.bind(this));
+  saveLog(dir, cb = () => {}) {
+    if (!dir) cb(new Error('No directory for save was provided'));
     const date = new Date();
     this.workbook.write(
       path.join(
@@ -88,16 +92,14 @@ class XLSLogger {
   }
 
   _addWorksheets() {
-    this.batteryWorksheet = this.workbook.addWorksheet(
-      __('battery')
-    );
-    this.fuelCellWroksheet = this.workbook.addWorksheet(
-      __('fuel cell')
-    );
+    this.batteryWorksheet = this.workbook.addWorksheet(__('battery'));
+    this.fuelCellWroksheet = this.workbook.addWorksheet(__('fuel cell'));
   }
 
   _validate(values) {
-    for (let i = 0; i < values.length; i++) if (isNaN(values[i])) return;
+    for (let i = 0; i < values.length; i++)
+      if (typeof values[i] !== 'number') 
+        throw new Error('Invalid data passed to excel logger!');
     return true;
   }
 

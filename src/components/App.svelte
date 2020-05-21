@@ -24,10 +24,24 @@
 {/if}
 {#if !$btConnected}
   <Loader />
-{:else if !slide}
-  <Graph onPrev={incrementSlide} />
-{:else if slide == 2}
-  <Characteristics onPrev={decrementSlide} />
 {:else}
-  <Dashboard onNext={incrementSlide} onPrev={decrementSlide} />
+  <div class="slider slide-{slide}">
+    <Graph onPrev={incrementSlide} />
+    <Dashboard onNext={incrementSlide} onPrev={decrementSlide} />
+    <Characteristics onPrev={decrementSlide} />
+  </div>
 {/if}
+
+<style>
+  .slider {
+    display: flex;
+    width: 300vw;
+    transition: 0.3s ease-in-out;
+  }
+  .slider.slide-1 {
+    transform: translateX(-100vw);
+  }
+  .slider.slide-2 {
+    transform: translateX(-200vw);
+  }
+</style>

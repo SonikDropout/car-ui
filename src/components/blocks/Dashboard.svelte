@@ -2,48 +2,37 @@
   import { driveMode, carData, rpm } from '../stores';
   import { GROUND_RESISTANCE, __ } from '../../constants';
   import { ipcRenderer } from 'electron';
-  import { fly } from 'svelte/transition';
   export let onPrev;
   export let onNext;
 </script>
 
 <div class="layout">
 
-  <header transition:fly={{ y: -300 }}>{__('dash title')}</header>
+  <header>{__('dash title')}</header>
 
   <main>
-    <h3 transition:fly={{ y: -300 }}>{__('ground type')}</h3>
+    <h3>{__('ground type')}</h3>
     {#each Object.keys(GROUND_RESISTANCE) as resistance, i}
-      <label
-        class:selected={resistance === $driveMode}
-        transition:fly={{ y: -300 }}>
+      <label class:selected={resistance === $driveMode}>
         <input type="radio" value={resistance} bind:group={$driveMode} />
         <i class="icon icon-{resistance}" />
         {GROUND_RESISTANCE[resistance].label}
       </label>
     {/each}
     <p>
-      <span transition:fly={{ x: -300 }}>{__('rpm')}</span>
-      <strong transition:fly={{ x: 300 }}>{$rpm}</strong>
+      <span>{__('rpm')}</span>
+      <strong>{$rpm}</strong>
     </p>
     <p>
-      <span transition:fly={{ x: -300 }}>{__('recuperation')}:</span>
-      <strong transition:fly={{ x: 300 }}>
-        {$carData.recuperation.value || __('no')}
-      </strong>
+      <span>{__('recuperation')}:</span>
+      <strong>{$carData.recuperation.value || __('no')}</strong>
     </p>
 
-    <button
-      on:click={onPrev}
-      class="align-top span-2 first"
-      transition:fly={{ y: 300 }}>
+    <button on:click={onPrev} class="align-top span-2 first">
       <i class="icon icon-graph" />
       {__('charts')}
     </button>
-    <button
-      on:click={onNext}
-      class="last span-6 align-top"
-      transition:fly={{ y: 300 }}>
+    <button on:click={onNext} class="last span-6 align-top">
       <i class="icon icon-lightning" />
       {__('characteristics')}
     </button>
@@ -53,9 +42,6 @@
 </div>
 
 <style>
-  .layout {
-    background-image: url('../../../app/backgrounds/dash.svg');
-  }
   main {
     display: grid;
     grid-template-columns: repeat(10, 1fr);
@@ -67,7 +53,6 @@
     font-weight: 400;
     font-size: 2.4rem;
     grid-column: span 10;
-    color: var(--bg-color);
   }
   .span-2 {
     grid-column-start: auto;
@@ -92,12 +77,10 @@
   strong {
     grid-column: span 2;
     text-align: center;
-    color: var(--bg-color);
   }
 
   header {
     grid-column: 1 / -1;
-    color: var(--bg-color);
   }
 
   .first {

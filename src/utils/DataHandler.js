@@ -10,7 +10,7 @@ class DataHandler {
   }
 
   getHashMapFromBuffer(buffer) {
-    if (!this._validateBuffer(buffer)) return;
+    this._validateBuffer(buffer)
     for (let key in this.values) {
       this.values[key].value = this._getValueFromBuffer(
         buffer,
@@ -37,11 +37,10 @@ class DataHandler {
   }
 
   _validateBuffer(buffer) {
-    if (buffer.length < BUFFER_LENGTH) return;
+    if (buffer.length < BUFFER_LENGTH) throw new Error('Buffer has incorrect length');
     for (let i = 0; i < SEPARATORS.length; i++) {
-      if (buffer[i] != SEPARATORS[i]) return;
+      if (buffer[i] != SEPARATORS[i]) throw new Error('Buffer has no separators in it');
     }
-    return true;
   }
 }
 

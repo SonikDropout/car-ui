@@ -9,7 +9,7 @@
   --corporate-orange: #f07e0f;
   --corporate-blue: #1aa2dd;
   --corporate-emerald: rgb(55, 171, 184);
-  --corporate-emerald-darken: #1C5B57;
+  --corporate-emerald-darken: #1c5b57;
   --corporate-light-green: #8bc041;
   --corporate-blue-darken: #065b8c;
   --danger-color: #dc3545;
@@ -28,6 +28,7 @@ body {
   width: 100%;
   height: 100%;
   overflow: hidden;
+  user-select: none;
 }
 
 body {
@@ -45,6 +46,7 @@ button {
   border-radius: 0.4rem;
   padding: 1.2rem;
   font-size: 2rem;
+  font: 2rem/1 'Montserrat';
   box-shadow: 0 3px 0 var(--corporate-grey-darken);
 }
 
@@ -73,6 +75,7 @@ button .icon {
   flex-direction: column;
   background-size: cover;
   background-repeat: no-repeat;
+  position: relative;
 }
 
 .layout main {
@@ -86,17 +89,25 @@ header {
   padding: 0;
   height: 8rem;
   line-height: 8rem;
-  font-family: "Oswald", "Franklin Gothic Medium", "Arial Narrow", Arial,
-  sans-serif;
+  font-family: 'Oswald', 'Franklin Gothic Medium', 'Arial Narrow', Arial,
+    sans-serif;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-weight: normal;
-  font-family: "Oswald", "Franklin Gothic Medium", "Arial Narrow", Arial,
-  sans-serif;
+  font-family: 'Oswald', 'Franklin Gothic Medium', 'Arial Narrow', Arial,
+    sans-serif;
 }
 
-h3, h4, h5, h6 {
+h3,
+h4,
+h5,
+h6 {
   font-weight: 300;
 }
 

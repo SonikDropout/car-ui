@@ -1,4 +1,4 @@
-function delay(f, ms) {
+function debounce(f, ms) {
   let timeout;
   return function() {
     clearTimeout(timeout);
@@ -7,5 +7,5 @@ function delay(f, ms) {
 }
 
 module.exports = {
-  delay
+  debounce
 }
