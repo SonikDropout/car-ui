@@ -1,19 +1,21 @@
 # INSTALL REQUIRED PACKAGES
-sudo apt-get update
-sudo apt-get -y install xorg libgconf-2-4 libgtk2.0-0 bluetooth bluez libbluetooth-dev libudev-dev pigpio chromium-browser
+sudo apt-get update &&
+sudo apt-get -y install xorg libgconf-2-4 libgtk2.0-0 bluetooth bluez libbluetooth-dev libudev-dev pigpio chromium-browser &&
 
 # MAIN APP INSTALLATION
-ELECTRON_MIRROR="https://cdn.npm.taobao.org/dist/electron/"
-npm i
-npm run build
-sudo mkdir /opt/bt-car
-sudo mv dist/linux-armv7l-unpacked/** /opt/bt-car/
+ELECTRON_MIRROR="https://cdn.npm.taobao.org/dist/electron/" &&
+npm i &&
+npm run build &&
+sudo mkdir /opt/bt-car &&
+sudo mv dist/linux-armv7l-unpacked/** /opt/bt-car/ &&
 
 # MAIN APP AUTOSTART
-sudo echo '#!/bin/sh' > /etc/rc.local
-sudo echo 'su -s /bin/bash -c startx pi&' >> /etc/rc.local
-sudo echo 'exit 0' >> /etc/rc.local
-sudo echo 'allowed_users=anybody' >> /etc/X11/Xwrapper.config
+sudo su
+echo '#!/bin/sh' > /etc/rc.local
+echo 'su -s /bin/bash -c startx pi&' >> /etc/rc.local
+echo 'exit 0' >> /etc/rc.local
+echo 'allowed_users=anybody' >> /etc/X11/Xwrapper.config
+exit
 echo 'sudo /opt/bt-car/CarController' > ~/.xinitrc
 chmod +x ~/.xinitrc
 
