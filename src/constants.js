@@ -5,7 +5,7 @@ i18n.loadJSON(path.join(__dirname, '..', 'locale', 'ru.json'), 'ru');
 i18n.loadJSON(path.join(__dirname, '..', 'locale', 'de.json'), 'de');
 i18n.setLocale('ru');
 
-const MAX_POINTS = 10000;
+const MAX_POINTS = 2000;
 
 const CONNECTION_TIMEOUT = 30000;
 

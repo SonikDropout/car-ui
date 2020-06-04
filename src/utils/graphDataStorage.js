@@ -11,9 +11,8 @@ class PointsStorage {
   addRow(row) {
     this.rows.push(row);
     this.points.push({ x: row[this._xCol], y: row[this._yCol] });
-    if (this.rows.length > MAX_POINTS) {
-      this.rows.shift();
-      this.points.shift();
+    if (this.points.length > MAX_POINTS) {
+      this.downsamplePoints();
     }
     this._sortPoints();
   }
@@ -37,8 +36,20 @@ class PointsStorage {
     this.rows = [];
   }
 
+  _downsamplePoints() {
+    const divider = Math.round(this.rows.length / MAX_POINTS * 2);
+    this.points = [];
+    for (let i = 0; i < this.rows.length; ++i)
+      if (!(i % divider))
+        this.points.push({
+          x: this.rows[i][this._xCol],
+          y: this.rows[i][this._yCol],
+        });
+    this._sortPoints();
+  }
+
   _updatePoints() {
-    this.points = this.rows.map(row => ({
+    this.points = this.rows.map((row) => ({
       x: row[this._xCol],
       y: row[this._yCol],
     }));
