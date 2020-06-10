@@ -3,7 +3,7 @@ const i18n = require('./utils/translator');
 
 i18n.loadJSON(path.join(__dirname, '..', 'locale', 'ru.json'), 'ru');
 i18n.loadJSON(path.join(__dirname, '..', 'locale', 'de.json'), 'de');
-i18n.setLocale('de');
+i18n.setLocale('ru');
 
 const MAX_POINTS = 10000;
 
