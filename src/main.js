@@ -111,10 +111,9 @@ function listenBtConnect() {
 }
 
 function launch() {
-  const screenArea = electron.screen.getPrimaryDisplay().workAreaSize;
   win = new BrowserWindow({
-    width: isPi ? screenArea.width : 1024,
-    height: isPi ? screenArea.height : 600,
+    width: 1024,
+    height: 600,
     fullscreen: isPi,
     frame: false,
     webPreferences: {
