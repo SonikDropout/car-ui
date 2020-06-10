@@ -166,7 +166,7 @@
     {/each}
 
     <div class="chart-wrapper">
-      <canvas id="chart" width="650" height="370" />
+      <canvas id="chart" width="580" height="370" />
     </div>
 
     <button
@@ -258,5 +258,9 @@
   .eject {
     font-size: 1.4rem;
     padding: 0.4rem 0.8rem;
+  }
+
+  canvas {
+    touch-action: pinch-zoom;
   }
 </style>

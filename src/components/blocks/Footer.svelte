@@ -17,6 +17,7 @@
 
   div {
     width: 40%;
+    white-space: nowrap;
   }
 </style>
 

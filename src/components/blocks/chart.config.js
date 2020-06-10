@@ -11,7 +11,6 @@ module.exports = function config(points, axes) {
       ],
     },
     options: {
-      responsive: false,
       elements: {
         point: {
           radius: 0,
