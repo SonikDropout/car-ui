@@ -12,7 +12,7 @@ class PointsStorage {
     this.rows.push(row);
     this.points.push({ x: row[this._xCol], y: row[this._yCol] });
     if (this.points.length > MAX_POINTS) {
-      this.downsamplePoints();
+      this._downsamplePoints();
     }
     this._sortPoints();
   }
