@@ -162,7 +162,7 @@ const CHART_CONSTRAINTS = {
   'batteryCurrent': [0, 20],
   'fuelCellVoltage': [0, 15],
   'fuelCellCurrent': [0, 6],
-  'fuelCellTemperature': [0, 60],
+  'fuelCellTemp': [0, 60],
   'hydrogenConsumption': [0, 800],
 }
 
