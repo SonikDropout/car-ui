@@ -11,11 +11,12 @@
     height: 5rem;
     line-height: 5rem;
     font-size: 1.6rem;
-    padding: 0 9%;
+    padding: 0 3.6rem;
+    justify-content: space-between;
   }
 
   div {
-    width: 50%;
+    width: 40%;
   }
 </style>
 

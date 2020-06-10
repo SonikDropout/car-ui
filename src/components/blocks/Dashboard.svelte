@@ -14,8 +14,7 @@
     <h3>{__('ground type')}</h3>
     {#each Object.keys(GROUND_RESISTANCE) as resistance, i}
       <label class:selected={resistance === $driveMode}>
-        <input type="radio" value={resistance} bind:group={$driveMode} />
-        <i class="icon icon-{resistance}" />
+        <input type="radio" class="hidden" value={resistance} bind:group={$driveMode} />
         {GROUND_RESISTANCE[resistance].label}
       </label>
     {/each}
@@ -28,11 +27,11 @@
       <strong>{$carData.recuperation.value || __('no')}</strong>
     </p>
 
-    <button on:click={onPrev} class="align-top span-2 first">
+    <button on:click={onPrev} class="charts">
       <i class="icon icon-graph" />
       {__('charts')}
     </button>
-    <button on:click={onNext} class="last span-6 align-top">
+    <button on:click={onNext} class="characteristics">
       <i class="icon icon-lightning" />
       {__('characteristics')}
     </button>
@@ -44,25 +43,16 @@
 <style>
   main {
     display: grid;
-    grid-template-columns: repeat(10, 1fr);
+    grid-template-columns: repeat(12, 1fr);
     grid-column-gap: 2rem;
     grid-template-rows: 8rem repeat(3, auto) 10rem;
+    padding: 0 3.6rem;
   }
   h3 {
     text-align: center;
     font-weight: 400;
     font-size: 2.4rem;
-    grid-column: span 10;
-  }
-  .span-2 {
-    grid-column-start: auto;
-    grid-column-end: span 2;
-  }
-  .span-6 {
-    grid-column: span 6;
-  }
-  .align-top {
-    align-self: start;
+    grid-column: span 12;
   }
   p {
     grid-column: 2 / -2;
@@ -83,22 +73,8 @@
     grid-column: 1 / -1;
   }
 
-  .first {
-    grid-column-start: 2;
-  }
-
-  input[type='radio'] {
-    position: absolute;
-    top: -9999px;
-    left: -9999px;
-    opacity: 0;
-    width: 0;
-    height: 0;
-    display: block;
-  }
-
   label {
-    grid-column-end: span 2;
+    grid-column-end: span 3;
     grid-column-start: auto;
     background-color: var(--corporate-grey);
     color: var(--bg-color);
@@ -110,12 +86,17 @@
     text-align: center;
   }
 
-  label .icon {
-    font-size: 1.8rem;
+  button {
+    align-self: start;
   }
 
-  label:first-of-type {
-    grid-column-start: 2;
+  .charts {
+    grid-column: span 3;
+  }
+
+  .characteristics {
+    grid-column: span 7;
+    grid-column-end: -1;
   }
 
   .selected {

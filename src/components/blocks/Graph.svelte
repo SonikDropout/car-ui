@@ -16,6 +16,7 @@
   } from '../../constants';
   import { scaleLinear } from '../../utils/numagic';
   import Select from '../elements/Select';
+  import RadioGroup from '../elements/RadioGroup';
   import { ipcRenderer } from 'electron';
   import { onMount, onDestroy } from 'svelte';
   import Chart from 'chart.js';
@@ -89,7 +90,9 @@
     }
   });
 
-  function selectXOption(optionId, blockId) {
+  function selectXOption(e) {
+    const blockId = e.target.name[0];
+    const optionId = e.target.value;
     if (blockId != selectedBlock.id) {
       selectedBlock = selectBlocks[blockId];
       selectedY = selectedBlock.yOptions[0];
@@ -98,7 +101,9 @@
     updateAxes();
   }
 
-  function selectYOption(optionId, blockId) {
+  function selectYOption(e) {
+    const blockId = e.target.name[0];
+    const optionId = e.target.value;
     if (blockId != selectedBlock.id) {
       selectedBlock = selectBlocks[blockId];
       selectedX = selectedBlock.xOptions[0];
@@ -145,25 +150,23 @@
     {#each selectBlocks as block, i}
       <fieldset>
         <legend>{block.title}</legend>
-        <Select
-          onChange={selectXOption}
-          name={i}
-          order={i * 2}
+        <RadioGroup
+          label="Ось х: "
+          on:change={selectXOption}
+          name={i + 'x'}
           options={block.xOptions}
-          defaultOption={defaultXOption}
           value={block === selectedBlock ? selectedX.id : void 0} />
-        <Select
-          onChange={selectYOption}
-          name={i}
-          order={i * 2 + 1}
+        <RadioGroup
+          label="Ось у: "
+          on:change={selectYOption}
+          name={i + 'y'}
           options={block.yOptions}
-          defaultOption={defaultYOption}
           value={block === selectedBlock ? selectedY.id : void 0} />
       </fieldset>
     {/each}
 
     <div class="chart-wrapper">
-      <canvas id="chart" width="590" height="370" />
+      <canvas id="chart" width="650" height="370" />
     </div>
 
     <button
@@ -192,21 +195,22 @@
     grid-column-gap: 1.6rem;
     grid-row-gap: 0.8rem;
     grid-template-rows: auto auto 5rem;
+    padding: 0 3.6rem;
   }
 
   .chart-wrapper {
     grid-row: 1 / 3;
-    grid-column: 5 / 12;
+    grid-column: 5 / 13;
   }
 
   button.save {
-    grid-column-start: 2;
+    grid-column-start: 1;
     grid-column-end: span 7;
   }
 
   button.back {
-    grid-column-end: span 3;
-    grid-column-start: 9;
+    grid-column-end: span 2;
+    grid-column-start: 11;
   }
 
   button {
@@ -217,8 +221,7 @@
     border: none;
     padding-top: 0;
     padding-left: 0;
-    padding-right: 3rem;
-    grid-column: 2 / 5;
+    grid-column: 1 / 5;
   }
 
   legend {

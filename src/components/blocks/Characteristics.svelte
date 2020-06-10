@@ -103,6 +103,7 @@
     grid-template-columns: repeat(12, 1fr);
     grid-column-gap: 1.6rem;
     grid-template-rows: 16rem auto 5rem;
+    padding: 0 3.6rem;
   }
 
   ul {
@@ -149,7 +150,6 @@
   }
 
   button {
-    grid-column-start: 2;
     grid-column-end: span 2;
   }
 
