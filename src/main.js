@@ -72,7 +72,7 @@ function listenRenderer() {
   ipcMain.on('saveLog', (e) => {
     logger.saveLog(state.usbPath, err => {
       if (err) e.sender.send('saveError', err);
-      else setTimeout(() => e.sender.send('logSaved'), 30000);
+      else setTimeout(() => e.sender.send('logSaved'), 50000);
     });
   });
   ipcMain.on('reload', () => {
