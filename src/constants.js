@@ -151,8 +151,8 @@ STORED_VALUES.numOfBatteryValues = 2;
 
 const GROUND_RESISTANCE = {
   low: { dutyCycle: 0, label: i18n.__('low') },
-  medium: { dutyCycle: 138 * 4000, label: i18n.__('medium') },
-  high: { dutyCycle: 143 * 4000, label: i18n.__('high') },
+  medium: { dutyCycle: 128 * 4000, label: i18n.__('medium') },
+  high: { dutyCycle: 138 * 4000, label: i18n.__('high') },
   veryHigh: { dutyCycle: 148 * 4000, label: i18n.__('very high') },
 };
 
