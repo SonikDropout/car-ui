@@ -7,6 +7,7 @@
   import Dashboard from './blocks/Dashboard';
   import Graph from './blocks/Graph';
   import Characteristics from './blocks/Characteristics';
+  import Version from './elements/Version';
 
   let slide = 1;
 
@@ -19,6 +20,7 @@
   }
 </script>
 
+<Version />
 {#if $appError}
   <ErrorPage {...$appError} onConfirm={() => ipcRenderer.send('reload')} />
 {/if}
