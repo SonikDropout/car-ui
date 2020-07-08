@@ -8,6 +8,9 @@ const {
   SEPARATORS,
   __,
 } = require('../constants');
+const os = require('os');
+const path = require('path')
+const carBtAddress = require(path.join(os.homedir(), 'car-ui', 'setting.json')).MACAddress;
 
 class BluetoothConnector extends EventEmitter {
   constructor() {
@@ -40,9 +43,11 @@ class BluetoothConnector extends EventEmitter {
 
   listenToDiscover() {
     noble.on('discover', device => {
-      console.info('Noble discovered device');
-      noble.stopScanning();
-      this.connectToDevice(device);
+      if (device.address === carBtAddress) {
+        console.info('Noble found car');
+        noble.stopScanning();
+        this.connectToDevice(device);
+      }
     });
   }
 
