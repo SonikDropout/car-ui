@@ -5,3 +5,4 @@ dist
 *.map
 app/renderer.js
 app/main.css
+settings.json
