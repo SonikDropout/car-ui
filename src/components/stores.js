@@ -61,7 +61,7 @@ const batteryCharge = derived(carData, ($carData) => {
   }
 });
 
-const btConnected = writable(isPi ? initialState.btConnected : true);
+const btConnected = writable(isPi ? initialState.btConnected : /*true*/false);
 
 const usbConnected = writable(!!initialState.usbPath);
 
@@ -69,15 +69,10 @@ const appError = writable();
 
 ipcRenderer.on('btConnected', () => {
   btConnected.set(true);
-  appError.set(void 0);
 });
 ipcRenderer.on('btDisconnected', () => {
   timeStart = 0;
   btConnected.set(false);
-  appError.set({
-    title: __('connection lost'),
-    message: __('try reconnecting'),
-  });
 });
 ipcRenderer.on('btData', (e, data) => {
   carData.set(data);

@@ -10,6 +10,7 @@ let win,
   bt,
   logger,
   gpio,
+  cars = [],
   state = {};
 
 const mode = process.env.NODE_ENV;
@@ -63,14 +64,15 @@ function mockPeripherals() {
 }
 
 function listenRenderer() {
-  ipcMain.on('getAppState', e => (e.returnValue = state));
+  ipcMain.on('getAppState', (e) => (e.returnValue = state));
+  ipcMain.on('getCarList', (e) => (e.returnValue = cars));
   ipcMain.on('driveModeChange', (e, dm) => gpio.changeDriveMode(dm));
   ipcMain.on('changeResistancePWM', (e, key, dutyCycle) =>
     gpio.changeResistancePWM(key, dutyCycle)
   );
   ipcMain.on('excelRow', (e, row) => logger.writeRow(row));
   ipcMain.on('saveLog', (e) => {
-    logger.saveLog(state.usbPath, err => {
+    logger.saveLog(state.usbPath, (err) => {
       if (err) e.sender.send('saveError', err);
       else setTimeout(() => e.sender.send('logSaved'), 50000);
     });
@@ -80,6 +82,11 @@ function listenRenderer() {
     bt.startScanning();
   });
   ipcMain.on('ejectUSB', usb.eject);
+  ipcMain.on('findAnotherCar', () => {
+    cars = [];
+    bt.startScanning();
+    win.webContents.send('btDisconnected');
+  });
 }
 
 function addPeripheralsListeners() {
@@ -89,11 +96,15 @@ function addPeripheralsListeners() {
     state.btConnected = false;
     listenBtConnect();
   })
-    .on('data', data => win.webContents.send('btData', data))
-    .on('error', error => win.webContents.send('error', error));
-  gpio.on('rpmMeasure', rpm => win.webContents.send('rpmMeasure', rpm));
+    .on('data', (data) => win.webContents.send('btData', data))
+    .on('error', (error) => win.webContents.send('error', error))
+    .on('carDiscovered', (car) => {
+      cars.push(car);
+      win.webContents.send('updateCarsList', cars);
+    });
+  gpio.on('rpmMeasure', (rpm) => win.webContents.send('rpmMeasure', rpm));
   usb
-    .on('add', path => {
+    .on('add', (path) => {
       win.webContents.send('usbConnected');
       state.usbPath = path;
     })
@@ -134,7 +145,7 @@ function launch() {
 
   const watcher = reloadOnChange(win);
 
-  win.on('closed', function() {
+  win.on('closed', function () {
     bt.removeAllListeners();
     usb.removeAllListeners();
     gpio.removeAllListeners();

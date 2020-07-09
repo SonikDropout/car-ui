@@ -8,32 +8,38 @@ const {
   SEPARATORS,
   __,
 } = require('../constants');
-const os = require('os');
-const path = require('path')
-const carBtAddress = require(path.join(os.homedir(), 'car-ui', 'setting.json')).MACAddress;
+const fs = require('fs');
+const carBtAddress = require('/home/pi/car-ui/config.json').MACAddress;
 
 class BluetoothConnector extends EventEmitter {
   constructor() {
     super();
     this.timeout = 0;
+    this.foundCars = [];
     this._connectedDevice = null;
+    this.rememberPrevious = false;
     this.tryOpeningConnection();
   }
 
-  startScanning() {
-    noble.startScanning([SERVICE_UUID]);
+  startScanning(rememberPrevious) {
+    this.foundCars = [];
+    this.rememberPrevious = rememberPrevious;
+    if (noble.state === 'poweredOn') {
+      noble.startScanning([SERVICE_UUID]);
+    } else {
+      this._listenStateChange();
+    }
   }
 
   tryOpeningConnection() {
-    this.listenStateChange();
-    this.listenToDiscover();
+    this._listenToDiscover();
   }
 
-  listenStateChange() {
-    noble.on('stateChange', state => {
+  _listenStateChange() {
+    noble.on('stateChange', (state) => {
       if (state === 'poweredOn') {
         console.info('Noble start scanning');
-        this.startScanning();
+        noble.startScanning([SERVICE_UUID]);
       } else {
         console.warn('Noble stop scanning');
         noble.stopScanning();
@@ -41,18 +47,34 @@ class BluetoothConnector extends EventEmitter {
     });
   }
 
-  listenToDiscover() {
-    noble.on('discover', device => {
-      if (device.address === carBtAddress) {
+  _listenToDiscover() {
+    noble.on('discover', (device) => {
+      this.foundCars.push(device);
+      this.emit('carDiscovered', {
+        address: device.address,
+        name: device.advertisement.localName,
+      });
+      if (this.rememberPrevious && device.address === carBtAddress) {
         console.info('Noble found car');
         noble.stopScanning();
-        this.connectToDevice(device);
+        this._connectToDevice(device);
       }
     });
   }
 
-  connectToDevice(device) {
-    device.connect(err => {
+  connectToCar(address) {
+    fs.writeFile(
+      '/home/pi/car-ui/config.json',
+      JSON.stringify({ MACAddress: address }),
+      () => {}
+    );
+    this._connectToDevice(
+      this.foundCars.find((dev) => dev.address === address)
+    );
+  }
+
+  _connectToDevice(device) {
+    device.connect((err) => {
       if (err) {
         console.error(err.message);
         this.startScanning();
@@ -65,12 +87,12 @@ class BluetoothConnector extends EventEmitter {
       device.discoverSomeServicesAndCharacteristics(
         [SERVICE_UUID],
         [CHARACTERISTIC_UUID],
-        this.onServicesAndCharacteristicsDiscovered.bind(this)
+        this._onServicesAndCharacteristicsDiscovered.bind(this)
       );
     });
   }
 
-  onServicesAndCharacteristicsDiscovered(err, services, characteristics) {
+  _onServicesAndCharacteristicsDiscovered(err, services, characteristics) {
     if (err) {
       this._handleError(err);
       return;
@@ -86,7 +108,7 @@ class BluetoothConnector extends EventEmitter {
   }
 
   _subscribeToCharacteristic(characteristic) {
-    characteristic.subscribe(err => {
+    characteristic.subscribe((err) => {
       if (err) {
         this._handleError(err);
         return;
@@ -99,7 +121,7 @@ class BluetoothConnector extends EventEmitter {
   _listenCharacteristicData(characteristic) {
     const parser = new DataHandler();
     let firstChunk;
-    const handleData = data => {
+    const handleData = (data) => {
       clearTimeout(this.timeout);
       this.timeout = setTimeout(() => {
         this.startScanning();
