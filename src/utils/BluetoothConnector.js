@@ -76,6 +76,8 @@ class BluetoothConnector extends EventEmitter {
 
   disconnect() {
     this._connectedDevice.disconnect();
+    this.emit('disconnected');
+    this.startScanning();
   }
 
   _connectToDevice(device) {
