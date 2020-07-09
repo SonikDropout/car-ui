@@ -25,7 +25,7 @@
 
 <style>
   h2 {
-    font-size: 2.4rem;
+    font-size: 3.6rem;
     text-align: center;
     margin-bottom: 0;
   }
@@ -51,5 +51,9 @@
   ul {
     font-size: 2rem;
     font-weight: bold;
+    list-style-type: none;
+  }
+  li {
+    cursor: pointer;
   }
 </style>
