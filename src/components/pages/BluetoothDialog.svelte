@@ -55,5 +55,6 @@
   }
   li {
     cursor: pointer;
+    margin: 1.6rem;
   }
 </style>
