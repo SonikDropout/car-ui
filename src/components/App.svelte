@@ -8,8 +8,8 @@
   import Graph from './blocks/Graph';
   import Characteristics from './blocks/Characteristics';
   import Version from './elements/Version';
-  import ReconnectButton from './elements/ReconnectButton'
-  import BluetoothDialog from './pages/BluetoothDialog'
+  import ReconnectButton from './elements/ReconnectButton';
+  import BluetoothDialog from './pages/BluetoothDialog';
 
   let slide = 1;
 
@@ -23,13 +23,10 @@
 </script>
 
 <Version />
-<ReconnectButton />
-{#if $appError}
-  <ErrorPage {...$appError} onConfirm={() => ipcRenderer.send('reload')} />
-{/if}
 {#if !$btConnected}
   <BluetoothDialog />
 {:else}
+  <ReconnectButton />
   <div class="slider slide-{slide}">
     <Graph onPrev={incrementSlide} />
     <Dashboard onNext={incrementSlide} onPrev={decrementSlide} />

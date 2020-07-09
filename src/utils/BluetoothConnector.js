@@ -62,7 +62,7 @@ class BluetoothConnector extends EventEmitter {
     });
   }
 
-  connectToCar(address) {
+  connect(address) {
     fs.writeFile(
       '/home/pi/car-ui/config.json',
       JSON.stringify({ MACAddress: address }),
@@ -72,6 +72,10 @@ class BluetoothConnector extends EventEmitter {
     this._connectToDevice(
       this.foundCars.find((dev) => dev.address === address)
     );
+  }
+
+  disconnect() {
+    this._connectedDevice.disconnect();
   }
 
   _connectToDevice(device) {
@@ -85,6 +89,7 @@ class BluetoothConnector extends EventEmitter {
         this.emit('disconnected');
         this.startScanning();
       });
+      this._connectedDevice = device;
       device.discoverSomeServicesAndCharacteristics(
         [SERVICE_UUID],
         [CHARACTERISTIC_UUID],

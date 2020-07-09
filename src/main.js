@@ -53,6 +53,7 @@ function initRpiPeripherals() {
   const BluetoothConnector = require('./utils/BluetoothConnector');
   const GPIOManager = require('./utils/GPIOManager');
   bt = new BluetoothConnector();
+  bt.startScanning();
   gpio = new GPIOManager();
 }
 
@@ -84,10 +85,9 @@ function listenRenderer() {
   ipcMain.on('ejectUSB', usb.eject);
   ipcMain.on('findAnotherCar', () => {
     cars = [];
-    bt.startScanning();
-    win.webContents.send('btDisconnected');
+    bt.disconnect();
   });
-  ipcMain.on('connectToCar', (e, addr) => bt.connectToCar(addr))
+  ipcMain.on('connectToCar', (e, addr) => bt.connect(addr))
 }
 
 function addPeripheralsListeners() {

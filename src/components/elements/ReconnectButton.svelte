@@ -13,6 +13,7 @@
     left: 1rem;
     top: 1rem;
     cursor: pointer;
+    z-index: 991;
   }
   img {
     width: 2rem;
