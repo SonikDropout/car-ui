@@ -68,6 +68,7 @@ class BluetoothConnector extends EventEmitter {
       JSON.stringify({ MACAddress: address }),
       () => {}
     );
+    noble.stopScanning();
     this._connectToDevice(
       this.foundCars.find((dev) => dev.address === address)
     );

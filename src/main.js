@@ -87,6 +87,7 @@ function listenRenderer() {
     bt.startScanning();
     win.webContents.send('btDisconnected');
   });
+  ipcMain.on('connectToCar', (e, addr) => bt.connectToCar(addr))
 }
 
 function addPeripheralsListeners() {
