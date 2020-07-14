@@ -55,6 +55,7 @@
     selectedYId.set(selectedY.id);
     unsubscribePoints();
     chart.destroy();
+    pStorage.clear();
   });
 
   let selectedBlock = selectBlocks[$selectedBlockId],
