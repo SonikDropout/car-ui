@@ -53,6 +53,7 @@
     selectedBlockId.set(selectedBlock.id);
     selectedXId.set(selectedX.id);
     selectedYId.set(selectedY.id);
+    unsubscribePoints();
     chart.destroy();
   });
 
@@ -79,16 +80,16 @@
     chart.update();
   }
 
-  let firstSkipted;
-  lastGraphPoints.subscribe(newPoints => {
-    if (!firstSkipted) return (firstSkipted = true);
-    pStorage.addRow(newPoints);
-    ipcRenderer.send('excelRow', newPoints);
-    if (chart) {
-      chart.data.datasets[0].data = pStorage.points;
-      chart.update();
-    }
-  });
+  let firstSkipted,
+    unsubscribePoints = lastGraphPoints.subscribe(newPoints => {
+      if (!firstSkipted) return (firstSkipted = true);
+      pStorage.addRow(newPoints);
+      ipcRenderer.send('excelRow', newPoints);
+      if (chart) {
+        chart.data.datasets[0].data = pStorage.points;
+        chart.update();
+      }
+    });
 
   function selectXOption(e) {
     const blockId = e.target.name[0];
