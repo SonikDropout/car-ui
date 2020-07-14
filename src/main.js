@@ -53,7 +53,7 @@ function initRpiPeripherals() {
   const BluetoothConnector = require('./utils/BluetoothConnector');
   const GPIOManager = require('./utils/GPIOManager');
   bt = new BluetoothConnector();
-  bt.startScanning();
+  bt.startScanning(true);
   gpio = new GPIOManager();
 }
 
@@ -78,13 +78,10 @@ function listenRenderer() {
       else setTimeout(() => e.sender.send('logSaved'), 50000);
     });
   });
-  ipcMain.on('reload', () => {
-    if (win) win.reload();
-    bt.startScanning();
-  });
   ipcMain.on('ejectUSB', usb.eject);
   ipcMain.on('findAnotherCar', () => {
     cars = [];
+    bt.startScanning();
     bt.disconnect();
   });
   ipcMain.on('connectToCar', (e, addr) => bt.connect(addr))
