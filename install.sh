@@ -12,6 +12,7 @@ sudo mv dist/linux-armv7l-unpacked/** /opt/bt-car/ &&
 # MAIN APP AUTOSTART
 echo 'sudo /opt/bt-car/CarController' > ~/.xinitrc
 chmod +x ~/.xinitrc
+echo "{}" > config.json
 
 while read p; do sudo systemctl disable "$p"; done < unused-packages.list
 
