@@ -9,7 +9,6 @@ const {
   __,
 } = require('../constants');
 const fs = require('fs');
-const carBtAddress = require('/home/pi/car-ui/config.json').MACAddress;
 
 class BluetoothConnector extends EventEmitter {
   constructor() {
@@ -18,6 +17,12 @@ class BluetoothConnector extends EventEmitter {
     this.foundCars = [];
     this._connectedDevice = null;
     this.rememberPrevious = false;
+    try {
+      this.carBtAddress = require('/home/pi/car-ui/config.json').MACAddress;
+    } catch (e) {
+      console.error(e.message);
+      this.carBtAddress = null;
+    }
     this.tryOpeningConnection();
   }
 
@@ -54,8 +59,8 @@ class BluetoothConnector extends EventEmitter {
         address: device.address,
         name: device.advertisement.localName,
       });
-      if (this.rememberPrevious && device.address === carBtAddress) {
-        console.info('Noble found car');
+      if (this.rememberPrevious && device.address && device.address === this.carBtAddress) {
+        console.info('Noble found car', device.address);
         noble.stopScanning();
         this._connectToDevice(device);
       }
