@@ -88,7 +88,6 @@ function listenRenderer() {
 }
 
 function addPeripheralsListeners() {
-  listenBtConnect();
   bt.on('disconnected', () => {
     cars = [];
     win.webContents.send('btDisconnected');
