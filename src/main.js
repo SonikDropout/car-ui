@@ -92,9 +92,10 @@ function addPeripheralsListeners() {
   bt.on('disconnected', () => {
     cars = [];
     win.webContents.send('btDisconnected');
+    win.webContents.send('updateCarsList', cars);
     state.btConnected = false;
-    listenBtConnect();
   })
+    .on('connected', () => win.webContents.send('btConnected'))
     .on('data', (data) => win.webContents.send('btData', data))
     .on('error', (error) => win.webContents.send('error', error))
     .on('carDiscovered', (car) => {
@@ -111,13 +112,6 @@ function addPeripheralsListeners() {
       win.webContents.send('usbDisconnected');
       state.usbPath = void 0;
     });
-}
-
-function listenBtConnect() {
-  bt.once('data', () => {
-    win.webContents.send('btConnected');
-    state.btConnected = true;
-  });
 }
 
 function launch() {
