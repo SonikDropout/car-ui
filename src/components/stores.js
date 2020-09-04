@@ -67,15 +67,12 @@ const usbConnected = writable(!!initialState.usbPath);
 
 const appError = writable();
 
-ipcRenderer.once('btData', () => {
+ipcRenderer.once('btConnected', () => {
   btConnected.set(true);
 });
 ipcRenderer.on('btDisconnected', () => {
   timeStart = 0;
   btConnected.set(false);
-  ipcRenderer.once('btData', () => {
-    btConnected.set(true);
-  });
 });
 ipcRenderer.on('btData', (e, data) => {
   carData.set(data);

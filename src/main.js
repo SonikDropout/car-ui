@@ -80,21 +80,23 @@ function listenRenderer() {
   });
   ipcMain.on('ejectUSB', usb.eject);
   ipcMain.on('findAnotherCar', () => {
-    cars = [];
-    bt.startScanning();
+    clearCarList();
     bt.disconnect();
+    bt.startScanning();
   });
-  ipcMain.on('connectToCar', (e, addr) => bt.connect(addr))
+  ipcMain.on('connectToCar', (e, addr) => bt.connect(addr));
 }
 
 function addPeripheralsListeners() {
   bt.on('disconnected', () => {
-    cars = [];
+    clearCarList();
     win.webContents.send('btDisconnected');
-    win.webContents.send('updateCarsList', cars);
     state.btConnected = false;
   })
-    .on('connected', () => win.webContents.send('btConnected'))
+    .on('connected', () => {
+      win.webContents.send('btConnected');
+      state.btConnected = true;
+    })
     .on('data', (data) => win.webContents.send('btData', data))
     .on('error', (error) => win.webContents.send('error', error))
     .on('carDiscovered', (car) => {
@@ -111,6 +113,11 @@ function addPeripheralsListeners() {
       win.webContents.send('usbDisconnected');
       state.usbPath = void 0;
     });
+}
+
+function clearCarList() {
+  cars = [];
+  win.webContents.send('updateCarList', cars);
 }
 
 function launch() {
