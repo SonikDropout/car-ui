@@ -67,7 +67,7 @@ const usbConnected = writable(!!initialState.usbPath);
 
 const appError = writable();
 
-ipcRenderer.once('btConnected', () => {
+ipcRenderer.on('btConnected', () => {
   btConnected.set(true);
 });
 ipcRenderer.on('btDisconnected', () => {
