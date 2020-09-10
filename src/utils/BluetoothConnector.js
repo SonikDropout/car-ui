@@ -74,6 +74,7 @@ class BluetoothConnector extends EventEmitter {
       () => {}
     );
     noble.stopScanning();
+    clearTimeout(this.timeout);
     this._connectToDevice(
       this.foundCars.find((dev) => dev.address === address)
     );
