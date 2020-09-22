@@ -1,7 +1,6 @@
 <script>
   import { ipcRenderer } from 'electron';
-  import Button from '../atoms/Button';
-  import Spinner from '../atoms/Spinner';
+  import Spinner from '../elements/Spinner';
   let showModal = true,
     isUpdating;
   function startUpdate() {
@@ -24,8 +23,8 @@
       {:else}
         <p>Обновить сейчас?</p>
         <div class="buttons">
-          <Button on:click={startUpdate}>Да</Button>
-          <Button on:click={closeModal}>Нет</Button>
+          <button on:click={startUpdate}>Да</button>
+          <button on:click={closeModal}>Нет</button>
         </div>
       {/if}
 
