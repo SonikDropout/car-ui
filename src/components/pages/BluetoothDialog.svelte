@@ -37,7 +37,7 @@
     left: 0;
     background-color: rgba(0, 0, 0, 0.1);
     display: flex;
-    z-index: 9999;
+    z-index: 9000;
   }
   div {
     margin: auto;

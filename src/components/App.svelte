@@ -11,7 +11,8 @@
   import ReconnectButton from './elements/ReconnectButton';
   import BluetoothDialog from './pages/BluetoothDialog';
   import UpdateModal from './pages/UpdateModal';
-  let updateAvailable = ipcRenderer.sendSync('checkUpdate');
+  
+  let updateAvailable;
 
   ipcRenderer.on('updateAvailable', () => (updateAvailable = true));
 

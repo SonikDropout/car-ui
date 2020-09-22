@@ -91,13 +91,11 @@ function listenRenderer() {
   ipcMain.on('connectToCar', (e, addr) => bt.connect(addr));
 }
 
-
 function initUpdater() {
   checkUpdate().then((isUpdatable) => {
     if (isUpdatable) win.webContents.send('updateAvailable');
     updateAvailable = isUpdatable;
   });
-  ipcMain.on('checkUpdate', (e) => (e.returnValue = updateAvailable));
   ipcMain.on('updateProgramm', () =>
     exec('~/car-ui/scripts/update.sh', (err) => {
       if (err) console.error(err.message);
