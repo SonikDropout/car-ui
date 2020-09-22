@@ -3,6 +3,9 @@
   "version": "0.1.2",
   "description": "User interface for drift car",
   "main": "src/main.js",
+  "repository": {
+    "url": "https://github.com/SonikDropout/car-ui"
+  },
   "scripts": {
     "wp-dev": "webpack --watch --display-error-details",
     "wp-build": "cross-env NODE_ENV=production webpack",
@@ -66,7 +69,7 @@
   },
   "build": {
     "linux": {
-      "executableName": "CarController",
+      "executableName": "car-ui",
       "category": "education"
     }
   }
