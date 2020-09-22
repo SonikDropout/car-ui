@@ -1,6 +1,6 @@
 <script>
   import { onDestroy } from "svelte";
-  import Spinner from "../elements/Spinner";
+  import Spinner from "../elements/CarLoader";
   import { __ } from '../../constants';
   let dots = 1;
 </script>

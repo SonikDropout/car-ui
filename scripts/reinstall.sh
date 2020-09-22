@@ -1,1 +1,1 @@
-npm run build && reboot
+npm i && npm run build && reboot

@@ -10,6 +10,10 @@
   import Version from './elements/Version';
   import ReconnectButton from './elements/ReconnectButton';
   import BluetoothDialog from './pages/BluetoothDialog';
+  import UpdateModal from './pages/UpdateModal';
+  let updateAvailable = ipcRenderer.sendSync('checkUpdate');
+
+  ipcRenderer.on('updateAvailable', () => (updateAvailable = true));
 
   let slide = 1;
 
@@ -32,6 +36,9 @@
     <Dashboard onNext={incrementSlide} onPrev={decrementSlide} />
     <Characteristics onPrev={decrementSlide} />
   </div>
+{/if}
+{#if updateAvailable}
+  <UpdateModal />
 {/if}
 
 <style>

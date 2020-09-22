@@ -5,12 +5,15 @@ const usb = require('./utils/USBManager');
 const Logger = require('./utils/Logger');
 const { isPi } = require('./constants');
 const { app, BrowserWindow, ipcMain } = electron;
+const checkUpdate = require('./utils/updater');
+const { exec } = require('child_process');
 
 let win,
   bt,
   logger,
   gpio,
   cars = [],
+  updateAvailable,
   state = {};
 
 const mode = process.env.NODE_ENV;
@@ -41,6 +44,7 @@ function initPeripherals() {
 function initCommon() {
   logger = new Logger();
   usb.init();
+  initUpdater();
 }
 
 function removeListeners() {
@@ -85,6 +89,20 @@ function listenRenderer() {
     bt.startScanning();
   });
   ipcMain.on('connectToCar', (e, addr) => bt.connect(addr));
+}
+
+
+function initUpdater() {
+  checkUpdate().then((isUpdatable) => {
+    if (isUpdatable) win.webContents.send('updateAvailable');
+    updateAvailable = isUpdatable;
+  });
+  ipcMain.on('checkUpdate', (e) => (e.returnValue = updateAvailable));
+  ipcMain.on('updateProgramm', () =>
+    exec('~/car-ui/scripts/update.sh', (err) => {
+      if (err) console.error(err.message);
+    })
+  );
 }
 
 function addPeripheralsListeners() {
