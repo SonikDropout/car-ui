@@ -6,3 +6,4 @@ dist
 app/renderer.js
 app/main.css
 config.json
+*.log
