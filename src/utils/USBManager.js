@@ -82,7 +82,7 @@ function emitRemove() {
 }
 
 usbPort.eject = () => {
-  exec(`sudo eject ${connectedDevice}`, () => {
+  exec(`sudo umount ${connectedDevice}`, () => {
     connectedDevice = void 0;
   });
 };

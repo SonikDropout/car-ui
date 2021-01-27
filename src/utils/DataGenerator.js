@@ -1,7 +1,7 @@
-const { SEPARATORS } = require("../constants");
-const EventEmitter = require("events");
-const { randInt } = require("./numagic");
-const DataHander = require("./DataHandler");
+const { SEPARATORS } = require('../constants');
+const EventEmitter = require('events');
+const { randInt } = require('./numagic');
+const DataHander = require('./DataHandler');
 
 class DataGenerator extends EventEmitter {
   constructor() {
@@ -10,19 +10,19 @@ class DataGenerator extends EventEmitter {
     this.intervalID = 0;
     this.values = [3128, 10261, 0, 0, 1553, 5147, 357, 95, 0, 1443, 0, 1, 0];
     this.incrementers = [
-      n => n - randInt(1),
-      n => n - randInt(1),
+      (n) => n - randInt(1),
+      (n) => n - randInt(1),
       () => Number(this.values[0] < 3500),
       () => Number(this.values[0] < 3000),
-      n => n - randInt(1),
-      n => n - randInt(1),
-      n => n + randInt(1),
-      n => (this.values[6] > 380 ? 100 : 30),
-      n => n,
-      n => n,
-      n => n + randInt(1),
-      n => n,
-      n => n
+      (n) => n - randInt(1),
+      (n) => n - randInt(1),
+      (n) => n + randInt(1),
+      (n) => (this.values[6] > 380 ? 100 : 30),
+      (n) => n,
+      (n) => n,
+      (n) => n + randInt(1),
+      (n) => n,
+      (n) => n,
     ];
     this.generator = this.createGenerator();
     this.start();
@@ -38,7 +38,7 @@ class DataGenerator extends EventEmitter {
 
   _writeRow() {
     this.emit(
-      "data",
+      'data',
       this.handler.getHashMapFromBuffer(this.generator.next().value)
     );
   }

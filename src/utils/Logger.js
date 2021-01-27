@@ -16,6 +16,14 @@ class XLSLogger {
     this._currentRow = 1;
     this._fillTablesHeads();
   }
+  
+  clear() {
+    this.workbook = new Workbook();
+    this._addWorksheets();
+    this._createStyles();
+    this._currentRow = 1;
+    this._fillTablesHeads();
+  }
 
   writeRow(values) {
     try {

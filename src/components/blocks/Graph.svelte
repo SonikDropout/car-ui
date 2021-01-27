@@ -153,13 +153,13 @@
       <fieldset>
         <legend>{block.title}</legend>
         <RadioGroup
-          label="Ось х: "
+          label={__('x axis') + ': '}
           on:change={selectXOption}
           name={i + 'x'}
           options={block.xOptions}
           value={block === selectedBlock ? selectedX.id : void 0} />
         <RadioGroup
-          label="Ось у: "
+          label={__('y axis') + ': '}
           on:change={selectYOption}
           name={i + 'y'}
           options={block.yOptions}
