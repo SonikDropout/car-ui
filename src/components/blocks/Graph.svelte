@@ -81,9 +81,9 @@
     chart.update();
   }
 
-  let firstSkipted,
-    unsubscribePoints = lastGraphPoints.subscribe(newPoints => {
-      if (!firstSkipted) return (firstSkipted = true);
+  let firstSkipt,
+    unsubscribePoints = lastGraphPoints.subscribe((newPoints) => {
+      if (!firstSkipt) return (firstSkipt = true);
       pStorage.addRow(newPoints);
       ipcRenderer.send('excelRow', newPoints);
       if (chart) {
@@ -122,9 +122,10 @@
         isLogSaving = false;
         savedMessage = __('save success');
       })
-      .once('saveError', err => {
+      .once('saveError', (_, err) => {
         isLogSaving = false;
         savedMessage = __('save error');
+        console.error(err);
       });
   }
 
@@ -135,7 +136,6 @@
 </script>
 
 <div class="layout">
-
   {#if savedMessage}
     <div class="popup" transition:fly={{ y: -100 }}>
       <span class="popup-close" on:click={() => (savedMessage = void 0)}>
@@ -157,13 +157,15 @@
           on:change={selectXOption}
           name={i + 'x'}
           options={block.xOptions}
-          value={block === selectedBlock ? selectedX.id : void 0} />
+          value={block === selectedBlock ? selectedX.id : void 0}
+        />
         <RadioGroup
           label={__('y axis') + ': '}
           on:change={selectYOption}
           name={i + 'y'}
           options={block.yOptions}
-          value={block === selectedBlock ? selectedY.id : void 0} />
+          value={block === selectedBlock ? selectedY.id : void 0}
+        />
       </fieldset>
     {/each}
 
@@ -175,7 +177,8 @@
       class="save"
       on:click={saveExcel}
       disabled={!$usbConnected || isLogSaving}
-      title={$usbConnected ? __('write usb') : __('connect usb')}>
+      title={$usbConnected ? __('write usb') : __('connect usb')}
+    >
       <i class="icon icon-{isLogSaving ? 'spinner' : 'usb'}" />
       {__('save usb')}
     </button>
@@ -187,7 +190,6 @@
   </main>
 
   <Footer />
-
 </div>
 
 <style>
