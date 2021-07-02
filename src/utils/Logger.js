@@ -7,6 +7,7 @@ require('core-js/modules/es.object.assign');
 require('core-js/modules/es.object.keys');
 require('regenerator-runtime/runtime');
 
+const ExcelJS = require('exceljs/dist/es5')
 const { writeFile } = require('fs');
 const {
   __,
