@@ -1,8 +1,5 @@
 <script>
-  import Loader from './pages/Loader';
-  import Info from './pages/Info';
-  import ErrorPage from './pages/Error';
-  import { btConnected, appError } from './stores';
+  import { btConnected } from './stores';
   import { ipcRenderer } from 'electron';
   import Dashboard from './blocks/Dashboard';
   import Graph from './blocks/Graph';
