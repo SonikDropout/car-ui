@@ -9,24 +9,21 @@
     selectedBlockId,
   } from '../stores';
   import {
-    CAR_CHARACTERISTICS,
     __,
     STORED_VALUES,
     CHART_CONSTRAINTS,
   } from '../../constants';
-  import { scaleLinear } from '../../utils/numagic';
-  import Select from '../elements/Select';
   import RadioGroup from '../elements/RadioGroup';
   import { ipcRenderer } from 'electron';
   import { onMount, onDestroy } from 'svelte';
   import Chart from 'chart.js';
   import 'chartjs-plugin-zoom';
   import getChartConfig from './chart.config';
-  import { selectBlocks, defaultXOption, defaultYOption } from './graphOptions';
+  import { selectBlocks } from './graphOptions';
   import pStorage from '../../utils/graphDataStorage';
   export let onPrev;
 
-  let isLogSaving, stateToggler, chart, savedMessage;
+  let isLogSaving, chart, savedMessage;
 
   onMount(() => {
     const xRange = CHART_CONSTRAINTS[selectedX.name];
@@ -60,7 +57,6 @@
 
   let selectedBlock = selectBlocks[$selectedBlockId],
     selectedX = selectedBlock.xOptions[$selectedXId],
-    isScatter = $selectedXId,
     selectedY = selectedBlock.yOptions[$selectedYId];
 
   function updateAxes() {
@@ -116,7 +112,7 @@
 
   function saveExcel() {
     isLogSaving = true;
-    ipcRenderer.send('saveLog', pStorage.rows);
+    ipcRenderer.send('saveLog');
     ipcRenderer
       .once('logSaved', () => {
         isLogSaving = false;
