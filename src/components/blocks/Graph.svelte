@@ -28,6 +28,7 @@
   onMount(() => {
     const xRange = CHART_CONSTRAINTS[selectedX.name];
     const yRange = CHART_CONSTRAINTS[selectedY.name];
+    ipcRenderer.send('initLogger');
     chart = new Chart(
       document.getElementById('chart').getContext('2d'),
       getChartConfig(pStorage.points, {

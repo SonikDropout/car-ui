@@ -75,6 +75,7 @@ function listenRenderer() {
   ipcMain.on('changeResistancePWM', (e, key, dutyCycle) =>
     gpio.changeResistancePWM(key, dutyCycle)
   );
+  ipcMain.on('initLogger', () => logger.init());
   ipcMain.on('excelRow', (e, row) => logger.writeRow(row));
   ipcMain.on('saveLog', (e) => {
     logger.saveLog(state.usbPath, (err) => {

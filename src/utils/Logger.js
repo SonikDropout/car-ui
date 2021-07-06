@@ -18,8 +18,6 @@ const {
 
 class XLSLogger {
   constructor() {
-    this.createWorkbook();
-    this.clear = this.createWorkbook;
     this._thinBorder = {
       top: { style: 'thin' },
       bottom: { style: 'thin' },
@@ -28,7 +26,7 @@ class XLSLogger {
     };
   }
 
-  createWorkbook() {
+  init() {
     this.wb = new ExcelJS.Workbook();
     this._addWorksheets();
     this._fillHeaders();
