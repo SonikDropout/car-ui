@@ -19,8 +19,6 @@
       {#each cars as car (car.address)}
         <li data-address={car.address} on:click={selectCar}>{car.name}</li>
       {/each}
-        <li data-address='1231234' on:click={selectCar}>090056</li>
-        <li data-address='1231224' on:click={selectCar}>090057</li>
     </ul>
   </div>
 </section>
